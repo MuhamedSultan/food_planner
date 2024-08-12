@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id ("androidx.navigation.safeargs")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -45,4 +46,8 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui:2.5.3")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.airbnb.android:lottie:6.0.0")
+
+    implementation("com.google.firebase:firebase-bom:33.1.2")
+    implementation("com.google.firebase:firebase-analytics")
+
 }
