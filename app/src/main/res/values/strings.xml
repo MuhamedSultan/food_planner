@@ -3,4 +3,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="splash_desc">Plan your meals, discover new flavors</string>
+    <string name="signup_with_email">Signup With Email</string>
+    <string name="social_signup">or use social signup</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="login">Login</string>
+    <string name="already_have_an_account">Already Have An Account?</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="signup">sign up</string>
+    <string name="don_t_hava_an_account">Don\'t Hava An Account?</string>
+    <string name="default_web_client_id">509399104090-2rigo6hitcrilc4pmniomvd7m8pc22rp.apps.googleusercontent.com</string>
+    <string name="auth_alert_message">Please wait Logging in</string>
 </resources>
