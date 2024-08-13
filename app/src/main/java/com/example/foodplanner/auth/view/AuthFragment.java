@@ -69,8 +69,10 @@ public class AuthFragment extends Fragment implements AuthView {
         });
 
         binding.btnGoogleSignup.setOnClickListener(v -> {
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            googleSignInClient.signOut().addOnCompleteListener(task -> {
+                Intent signInIntent = googleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            });
         });
     }
 
