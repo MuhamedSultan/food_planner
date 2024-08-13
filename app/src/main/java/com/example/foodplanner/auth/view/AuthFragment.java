@@ -17,6 +17,7 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.auth.presenter.AuthPresenter;
 import com.example.foodplanner.auth.presenter.AuthPresenterImpl;
 import com.example.foodplanner.databinding.FragmentAuthBinding;
+import com.example.foodplanner.util.CustomAlertDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -30,7 +31,7 @@ public class AuthFragment extends Fragment implements AuthView {
     private FragmentAuthBinding binding;
     private GoogleSignInClient googleSignInClient;
     private AuthPresenter authPresenter;
-    AlertDialog dialog;
+    CustomAlertDialog customAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class AuthFragment extends Fragment implements AuthView {
                 .build();
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gOptions);
+        customAlertDialog = new CustomAlertDialog(requireContext());
+
     }
 
     @Override
@@ -98,23 +101,13 @@ public class AuthFragment extends Fragment implements AuthView {
 
     @Override
     public void showLoading() {
-        showDialog();
+        customAlertDialog.showDialog();
     }
 
     @Override
     public void hideLoading() {
-       dialog.dismiss();
+       customAlertDialog.dismissDialog();
     }
-    private void showDialog(){
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.auth_alert, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(dialogView);
-         dialog = builder.create();
-        dialog.show();
-        dialog.setCancelable(false);
 
-
-    }
 
 }
