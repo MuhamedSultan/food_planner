@@ -1,10 +1,8 @@
 package com.example.foodplanner.home.repository;
 
+import com.example.foodplanner.api.NetworkCallback;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.home.pojo.DailyRandomMeal;
-
-import io.reactivex.rxjava3.core.Single;
-
 
 public class HomeRepository {
     private final RemoteDataSource remoteDataSource;
@@ -22,8 +20,8 @@ public class HomeRepository {
     }
 
 
-    public Single<DailyRandomMeal> getDailyMeals() {
-        return remoteDataSource.getDailyMeals();
+    public void getDailyMeals(NetworkCallback<DailyRandomMeal> callback) {
+         remoteDataSource.getDailyMeals(callback);
     }
 
 }
