@@ -99,8 +99,8 @@ public class HomeFragment extends Fragment implements HomeView {
     private void setUpAllCategoriesRecyclerview(List<Category> categories){
         AllCategoriesAdapter adapter=new AllCategoriesAdapter(categories,requireContext());
         LinearLayoutManager layoutManager=new LinearLayoutManager(requireContext());
-        binding.categoryRecyclerView.setAdapter(adapter);
-        binding.categoryRecyclerView.setLayoutManager(layoutManager);
+        binding.allCategoriesRecyclerView.setAdapter(adapter);
+        binding.allCategoriesRecyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         adapter.setList(categories);
     }
