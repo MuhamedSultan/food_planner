@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentHomeBinding;
+import com.example.foodplanner.home.pojo.Category;
 import com.example.foodplanner.home.pojo.Meal;
 import com.example.foodplanner.home.presenter.HomePresenter;
 import com.example.foodplanner.home.presenter.HomePresenterImpl;
@@ -54,10 +57,11 @@ public class HomeFragment extends Fragment implements HomeView {
         ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
         presenter.getRandomMeal();
+        presenter.getAllCategories();
     }
 
     @Override
-    public void showData(List<Meal> meals) {
+    public void showDailyRandomMealData(List<Meal> meals) {
             Meal meal = meals.get(0);
             Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
             binding.strMeal.setText(meal.getStrMeal());
@@ -69,6 +73,11 @@ public class HomeFragment extends Fragment implements HomeView {
             });
 
 
+    }
+
+    @Override
+    public void showAllCategories(List<Category> categories) {
+        setUpAllCategoriesRecyclerview(categories);
     }
 
     @Override
@@ -87,6 +96,14 @@ public class HomeFragment extends Fragment implements HomeView {
 
     }
 
+    private void setUpAllCategoriesRecyclerview(List<Category> categories){
+        AllCategoriesAdapter adapter=new AllCategoriesAdapter(categories,requireContext());
+        LinearLayoutManager layoutManager=new LinearLayoutManager(requireContext());
+        binding.categoryRecyclerView.setAdapter(adapter);
+        binding.categoryRecyclerView.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        adapter.setList(categories);
+    }
 
     private void setActionBarUpButtonVisibility(boolean visible) {
         if (getActivity() != null && getActivity() instanceof AppCompatActivity) {

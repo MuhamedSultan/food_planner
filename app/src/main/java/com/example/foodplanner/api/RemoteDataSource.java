@@ -2,6 +2,7 @@ package com.example.foodplanner.api;
 
 import android.annotation.SuppressLint;
 
+import com.example.foodplanner.home.pojo.AllCategories;
 import com.example.foodplanner.home.pojo.DailyRandomMeal;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -24,6 +25,14 @@ public class RemoteDataSource {
                 .subscribe(
                         dailyRandomMeal -> callback.onSuccessResult(dailyRandomMeal),
                         throwable -> callback.onFailureResult(throwable.getMessage())
+                );
+    }
+    public void getAllCategories(NetworkCallback<AllCategories> callback){
+        mealsClient.getApiService().getAllCategories().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        allCategories -> {callback.onSuccessResult(allCategories);},
+                        throwable -> {callback.onFailureResult(throwable.getMessage());}
                 );
     }
 }

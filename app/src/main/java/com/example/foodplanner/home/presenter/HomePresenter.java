@@ -4,6 +4,7 @@ import com.example.foodplanner.home.pojo.Meal;
 
 public interface HomePresenter {
     void getRandomMeal();
+    void getAllCategories();
     void addMealToFavourite(Meal meal);
 
 }
