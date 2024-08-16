@@ -66,6 +66,28 @@ public class HomePresenterImpl implements  HomePresenter {
     }
 
     @Override
+    public void getAllMealDetailsById(String id) {
+        view.showLoading();
+        homeRepository.getMealsDetailsById(new NetworkCallback<DailyRandomMeal>() {
+            @Override
+            public void onSuccessResult(DailyRandomMeal result) {
+                List<Meal> mealList=result.getMeals();
+                if (mealList!=null&&!mealList.isEmpty()) {
+                    view.showMealsDetailsById(mealList);
+                }
+                view.hideLoading();
+            }
+
+            @Override
+            public void onFailureResult(String message) {
+                view.showErrorMessage(message);
+                view.hideLoading();
+            }
+        },id);
+
+    }
+
+    @Override
     public void addMealToFavourite(Meal meal) {
     }
 

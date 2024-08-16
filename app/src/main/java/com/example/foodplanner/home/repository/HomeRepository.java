@@ -28,5 +28,8 @@ public class HomeRepository {
     public void getAllCategories(NetworkCallback<AllCategories> callback){
         remoteDataSource.getAllCategories(callback);
     }
+    public void getMealsDetailsById(NetworkCallback<DailyRandomMeal> callback, String id){
+        remoteDataSource.getMealDetailsById(callback,id);
+    }
 
 }
