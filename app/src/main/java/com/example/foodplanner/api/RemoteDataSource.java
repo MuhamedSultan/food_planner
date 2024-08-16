@@ -2,6 +2,7 @@ package com.example.foodplanner.api;
 
 import android.annotation.SuppressLint;
 
+import com.example.foodplanner.category_details.pojo.CategoryMeals;
 import com.example.foodplanner.home.pojo.AllCategories;
 import com.example.foodplanner.home.pojo.DailyRandomMeal;
 
@@ -27,12 +28,23 @@ public class RemoteDataSource {
                         throwable -> callback.onFailureResult(throwable.getMessage())
                 );
     }
-    public void getAllCategories(NetworkCallback<AllCategories> callback){
-        mealsClient.getApiService().getAllCategories().subscribeOn(Schedulers.io())
+
+    public void getAllCategories(NetworkCallback<AllCategories> callback) {
+        mealsClient.getApiService().getAllCategories()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        allCategories -> {callback.onSuccessResult(allCategories);},
-                        throwable -> {callback.onFailureResult(throwable.getMessage());}
+                        allCategories -> {
+                            callback.onSuccessResult(allCategories);
+                        },
+                        throwable -> callback.onFailureResult(throwable.getMessage())
                 );
+    }
+
+    public void getMealsByCategory(NetworkCallback<CategoryMeals> callback, String categoryName) {
+        mealsClient.getApiService().getMealsByCategory(categoryName).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(allCategoryMeals -> {
+                    callback.onSuccessResult(allCategoryMeals);
+                }, throwable -> callback.onFailureResult(throwable.getMessage())
+        );
     }
 }

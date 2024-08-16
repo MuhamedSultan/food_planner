@@ -19,9 +19,11 @@ import java.util.List;
 public class AllCategoriesAdapter extends RecyclerView.Adapter<AllCategoriesAdapter.AllCategoriesViewHolder> {
     List<Category> categories;
     Context context;
-    public AllCategoriesAdapter(List<Category> categories,Context context){
+    CategoryClick categoryClick;
+    public AllCategoriesAdapter(List<Category> categories,Context context,CategoryClick categoryClick){
         this.categories=categories;
         this.context=context;
+        this.categoryClick=categoryClick;
     }
     @NonNull
     @Override
@@ -35,6 +37,9 @@ public class AllCategoriesAdapter extends RecyclerView.Adapter<AllCategoriesAdap
         Category category=categories.get(position);
         Glide.with(context).load(category.getStrCategoryThumb()).into(holder.categoryImage);
         holder.tvCategory.setText(category.getStrCategory());
+        holder.categoryImage.setOnClickListener(v->{
+            categoryClick.onCategoryClick(category.getStrCategory());
+        });
     }
 
     @Override
@@ -53,6 +58,7 @@ public class AllCategoriesAdapter extends RecyclerView.Adapter<AllCategoriesAdap
             super(itemView);
             categoryImage=itemView.findViewById(R.id.categoryImage);
             tvCategory=itemView.findViewById(R.id.tvCategoryName);
+
         }
     }
 }

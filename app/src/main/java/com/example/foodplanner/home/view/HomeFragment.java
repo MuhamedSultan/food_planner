@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements HomeView {
+public class HomeFragment extends Fragment implements HomeView,CategoryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
 
@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment implements HomeView {
     }
 
     private void setUpAllCategoriesRecyclerview(List<Category> categories){
-        AllCategoriesAdapter adapter=new AllCategoriesAdapter(categories,requireContext());
+        AllCategoriesAdapter adapter=new AllCategoriesAdapter(categories,requireContext(),this);
         LinearLayoutManager layoutManager=new LinearLayoutManager(requireContext());
         binding.allCategoriesRecyclerView.setAdapter(adapter);
         binding.allCategoriesRecyclerView.setLayoutManager(layoutManager);
@@ -112,5 +112,11 @@ public class HomeFragment extends Fragment implements HomeView {
                 activity.getSupportActionBar().setDisplayHomeAsUpEnabled(visible);
             }
         }
+    }
+
+    @Override
+    public void onCategoryClick(String categoryName) {
+        NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToCategoryFragment(categoryName);
+        Navigation.findNavController(requireView()).navigate(navDirections);
     }
 }
