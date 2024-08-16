@@ -20,6 +20,7 @@ import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentHomeBinding;
+import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.Category;
 import com.example.foodplanner.home.pojo.Meal;
 import com.example.foodplanner.home.presenter.HomePresenter;
@@ -27,13 +28,14 @@ import com.example.foodplanner.home.presenter.HomePresenterImpl;
 import com.example.foodplanner.home.repository.HomeRepository;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-
-public class HomeFragment extends Fragment implements HomeView,CategoryClick {
+public class HomeFragment extends Fragment implements HomeView, CategoryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,33 +58,51 @@ public class HomeFragment extends Fragment implements HomeView,CategoryClick {
         setActionBarUpButtonVisibility(false);
         ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
-        presenter.getRandomMeal();
+        String savedDate = LocalDataSource.getSavedDate(requireContext());
+        String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        if (savedDate != null && savedDate.equals(todayDate)) {
+            String savedMealId = LocalDataSource.getSavedMealId(requireContext());
+            presenter.getAllMealDetailsById(savedMealId);
+        } else {
+            presenter.getRandomMeal();
+        }
+
         presenter.getAllCategories();
     }
 
     @Override
     public void showDailyRandomMealData(List<Meal> meals) {
-            Meal meal = meals.get(0);
-            Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
-            binding.strMeal.setText(meal.getStrMeal());
-            binding.strCategory.setText(meal.getStrCategory());
-            binding.strArea.setText(meal.getStrArea());
-            binding.dailyMealCardView.setOnClickListener(v->{
-                NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getidMeal());
-                Navigation.findNavController(v).navigate(navDirections);
-            });
-
-
+       showMeal(meals);
     }
 
+    @Override
+    public void showMealsDetailsById(List<Meal> meals) {
+       showMeal(meals);
+    }
+
+    private void showMeal(List<Meal> mealsDetails){
+        Meal meal = mealsDetails.get(0);
+        LocalDataSource.saveMealId(requireContext(), meal.getidMeal());
+        Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
+        binding.strMeal.setText(meal.getStrMeal());
+        binding.strCategory.setText(meal.getStrCategory());
+        binding.strArea.setText(meal.getStrArea());
+        binding.dailyMealCardView.setOnClickListener(v -> {
+            NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getidMeal());
+            Navigation.findNavController(v).navigate(navDirections);
+        });
+    }
     @Override
     public void showAllCategories(List<Category> categories) {
         setUpAllCategoriesRecyclerview(categories);
     }
 
+
+
     @Override
     public void showErrorMessage(String message) {
-        Snackbar.make(requireView(),message,Snackbar.LENGTH_LONG).show();
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -93,12 +113,11 @@ public class HomeFragment extends Fragment implements HomeView,CategoryClick {
     @Override
     public void hideLoading() {
         binding.progressBar.setVisibility(View.GONE);
-
     }
 
-    private void setUpAllCategoriesRecyclerview(List<Category> categories){
-        AllCategoriesAdapter adapter=new AllCategoriesAdapter(categories,requireContext(),this);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(requireContext());
+    private void setUpAllCategoriesRecyclerview(List<Category> categories) {
+        AllCategoriesAdapter adapter = new AllCategoriesAdapter(categories, requireContext(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.allCategoriesRecyclerView.setAdapter(adapter);
         binding.allCategoriesRecyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -116,7 +135,7 @@ public class HomeFragment extends Fragment implements HomeView,CategoryClick {
 
     @Override
     public void onCategoryClick(String categoryName) {
-        NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToCategoryFragment(categoryName);
+        NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToCategoryFragment(categoryName);
         Navigation.findNavController(requireView()).navigate(navDirections);
     }
 }
