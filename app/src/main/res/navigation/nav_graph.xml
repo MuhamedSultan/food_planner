@@ -65,6 +65,9 @@
         <action
             android:id="@+id/action_homeFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -87,7 +90,19 @@
         android:label="fragment_meal_details"
         tools:layout="@layout/fragment_meal_details" >
         <argument
-            android:name="MealDetails"
-            app:argType="com.example.foodplanner.home.pojo.Meal" />
+            android:name="mealID"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.foodplanner.category_details.view.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" >
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_categoryFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
     </fragment>
 </navigation>
