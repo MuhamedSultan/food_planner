@@ -25,6 +25,7 @@ import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
 import com.example.foodplanner.home.pojo.Meal;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -69,8 +70,14 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
     }
     private void playYoutubeVideo(String url) {
-        String videoId = url.split("v=")[1];
+        String videoId = "";
+        if (!url.isEmpty()){
+             videoId = url.split("v=")[1];
+        }else {
+            Snackbar.make(requireView(),"There is no video Available for this meal",Snackbar.LENGTH_LONG).show();
+        }
         String embedUrl = "https://www.youtube.com/embed/" + videoId;
+
 
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.setWebChromeClient(new WebChromeClient());
