@@ -47,4 +47,11 @@ public class RemoteDataSource {
                 }, throwable -> callback.onFailureResult(throwable.getMessage())
         );
     }
+
+    public void getMealDetailsById(NetworkCallback<DailyRandomMeal> callback, String id) {
+        mealsClient.getApiService().getMealDetailsById(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(allMealsDetails -> {
+                    callback.onSuccessResult(allMealsDetails);
+                }, throwable -> callback.onFailureResult(throwable.getMessage())
+        );
+    }
 }

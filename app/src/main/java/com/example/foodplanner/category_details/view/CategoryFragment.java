@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavAction;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class CategoryFragment extends Fragment implements CategoryView {
+public class CategoryFragment extends Fragment implements CategoryView ,CategoryMealClick{
     private FragmentCategoryBinding binding;
     private CategoryDetailsPresenter presenter;
 
@@ -77,10 +80,17 @@ public class CategoryFragment extends Fragment implements CategoryView {
 
     }
     private void setupCategoryMealsRecyclerview(List<Meal> meals){
-        CategoryMealsAdapter adapter=new CategoryMealsAdapter(meals,requireContext());
+        CategoryMealsAdapter adapter=new CategoryMealsAdapter(meals,requireContext(),this);
         GridLayoutManager layoutManager=new GridLayoutManager(requireContext(),2);
         binding.allCategoryMealsRecyclerview.setAdapter(adapter);
         binding.allCategoryMealsRecyclerview.setLayoutManager(layoutManager);
         adapter.setList(meals);
+    }
+
+    @Override
+    public void onCategoryMealClick(String id) {
+        NavDirections navDirections=
+                CategoryFragmentDirections.actionCategoryFragmentToMealDetailsFragment(id);
+        Navigation.findNavController(requireView()).navigate(navDirections);
     }
 }

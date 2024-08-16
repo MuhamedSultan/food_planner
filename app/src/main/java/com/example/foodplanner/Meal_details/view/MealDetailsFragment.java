@@ -19,19 +19,26 @@ import android.webkit.WebViewClient;
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.Meal_details.pojo.IngredientItem;
 import com.example.foodplanner.Meal_details.pojo.Ingredients;
+import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenter;
+import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenterImpl;
+import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
+import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
 import com.example.foodplanner.home.pojo.Meal;
 
 import java.util.List;
 
 
-public class MealDetailsFragment extends Fragment {
+public class MealDetailsFragment extends Fragment implements MealsDetailsView{
     private FragmentMealDetailsBinding binding;
-
+    private MealsDetailsPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RemoteDataSource remoteDataSource=new RemoteDataSource();
+        MealsDetailsRepository repository=new MealsDetailsRepository(remoteDataSource);
+        presenter=new MealsDetailsPresenterImpl(this,repository);
 
     }
 
@@ -46,12 +53,10 @@ public class MealDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
-        Meal meal = args.getMealDetails();
-        IngredientItem ingredientItem = new IngredientItem();
-        Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView4);
-        setUpRecyclerview(ingredientItem.getIngredients(meal));
-        binding.tvInstructions.setText(meal.getStrInstructions());
-        playYoutubeVideo(meal.getStrYoutube());
+        String mealId = args.getMealID();
+
+
+        presenter.getAllMealDetailsById(mealId);
 
     }
 
@@ -64,19 +69,43 @@ public class MealDetailsFragment extends Fragment {
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
     }
     private void playYoutubeVideo(String url) {
-        // Convert YouTube URL to embed URL
         String videoId = url.split("v=")[1];
         String embedUrl = "https://www.youtube.com/embed/" + videoId;
 
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.setWebChromeClient(new WebChromeClient());
-        binding.webView.setWebViewClient(new WebViewClient()); // Ensures links open in WebView
+        binding.webView.setWebViewClient(new WebViewClient());
         binding.webView.loadUrl(embedUrl);
         binding.webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false; // Load the URL within the WebView
+                return false;
             }
         });
+    }
+
+    @Override
+    public void showMealsDetailsById(List<Meal> mealsDetails) {
+        Meal meal = mealsDetails.get(0);
+        IngredientItem ingredientItem = new IngredientItem();
+        Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView4);
+        setUpRecyclerview(ingredientItem.getIngredients(meal));
+        binding.tvInstructions.setText(meal.getStrInstructions());
+        playYoutubeVideo(meal.getStrYoutube());
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
     }
 }

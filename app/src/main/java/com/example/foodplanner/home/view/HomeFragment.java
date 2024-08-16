@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment implements HomeView,CategoryClick {
             binding.strCategory.setText(meal.getStrCategory());
             binding.strArea.setText(meal.getStrArea());
             binding.dailyMealCardView.setOnClickListener(v->{
-                NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal);
+                NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getidMeal());
                 Navigation.findNavController(v).navigate(navDirections);
             });
 

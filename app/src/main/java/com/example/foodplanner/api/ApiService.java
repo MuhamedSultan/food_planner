@@ -15,5 +15,7 @@ public interface ApiService {
     Single<AllCategories> getAllCategories();
     @GET("api/json/v1/1/filter.php")
     Single<CategoryMeals> getMealsByCategory(@Query("c") String categoryName);
+    @GET("api/json/v1/1/lookup.php")
+    Single<DailyRandomMeal> getMealDetailsById(@Query("i") String id);
 
 }

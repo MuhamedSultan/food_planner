@@ -8,11 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.L;
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.category_details.pojo.CategoryMeals;
 import com.example.foodplanner.category_details.pojo.Meal;
 
 import java.util.List;
@@ -20,9 +22,11 @@ import java.util.List;
 public class CategoryMealsAdapter extends RecyclerView.Adapter<CategoryMealsAdapter.CategoryMealViewHolder> {
 List<Meal> mealList;
 Context context;
-public CategoryMealsAdapter(List<Meal> mealList,Context context){
+ CategoryMealClick categoryMealClick;
+public CategoryMealsAdapter(List<Meal> mealList, Context context, CategoryMealClick categoryMealClick){
     this.mealList=mealList;
     this.context=context;
+    this.categoryMealClick=categoryMealClick;
 }
     @NonNull
     @Override
@@ -36,6 +40,9 @@ public CategoryMealsAdapter(List<Meal> mealList,Context context){
     Meal meal=mealList.get(position);
         Glide.with(context).load(meal.getStrMealThumb()).into(holder.categoryImage);
         holder.tvCategoryMealName.setText(meal.getStrMeal());
+        holder.categoryMealItem.setOnClickListener(v->{
+            categoryMealClick.onCategoryMealClick(meal.getidMeal());
+        });
     }
 
     @Override
@@ -49,11 +56,13 @@ public CategoryMealsAdapter(List<Meal> mealList,Context context){
 
     class CategoryMealViewHolder extends RecyclerView.ViewHolder {
         ImageView categoryImage;
-        TextView tvCategoryMealName,categoryMealDesc;
+        TextView tvCategoryMealName;
+        CardView categoryMealItem;
         public CategoryMealViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryImage=itemView.findViewById(R.id.categoryMealImage);
             tvCategoryMealName=itemView.findViewById(R.id.tvCategoryMealName);
+            categoryMealItem=itemView.findViewById(R.id.categoryMealItem);
 
         }
     }
