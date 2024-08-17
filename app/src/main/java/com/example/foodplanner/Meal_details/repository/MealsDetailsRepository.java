@@ -2,8 +2,7 @@ package com.example.foodplanner.Meal_details.repository;
 
 import com.example.foodplanner.api.NetworkCallback;
 import com.example.foodplanner.api.RemoteDataSource;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 
 public class MealsDetailsRepository {
 

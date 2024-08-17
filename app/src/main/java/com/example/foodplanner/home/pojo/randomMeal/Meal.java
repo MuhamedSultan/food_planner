@@ -1,4 +1,4 @@
-package com.example.foodplanner.home.pojo;
+package com.example.foodplanner.home.pojo.randomMeal;
 
 import android.os.Parcel;
 import android.os.Parcelable;

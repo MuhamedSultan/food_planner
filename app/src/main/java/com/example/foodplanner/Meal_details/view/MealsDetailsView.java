@@ -1,7 +1,7 @@
 package com.example.foodplanner.Meal_details.view;
 
 
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 

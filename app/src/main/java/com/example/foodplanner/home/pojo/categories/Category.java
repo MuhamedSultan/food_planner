@@ -1,4 +1,4 @@
-package com.example.foodplanner.home.pojo;
+package com.example.foodplanner.home.pojo.categories;
 
 import android.os.Parcel;
 import android.os.Parcelable;

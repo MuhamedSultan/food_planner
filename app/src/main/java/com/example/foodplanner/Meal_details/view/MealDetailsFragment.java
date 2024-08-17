@@ -24,7 +24,7 @@ import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenterImpl;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

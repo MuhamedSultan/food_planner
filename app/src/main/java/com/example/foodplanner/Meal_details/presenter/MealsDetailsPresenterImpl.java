@@ -3,8 +3,8 @@ package com.example.foodplanner.Meal_details.presenter;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.Meal_details.view.MealsDetailsView;
 import com.example.foodplanner.api.NetworkCallback;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
+import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 

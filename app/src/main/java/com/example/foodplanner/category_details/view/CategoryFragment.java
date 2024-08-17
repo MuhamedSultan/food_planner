@@ -5,29 +5,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavAction;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.foodplanner.Meal_details.view.MealDetailsFragmentArgs;
-import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.category_details.pojo.Meal;
 import com.example.foodplanner.category_details.presenter.CategoryDetailsPresenter;
 import com.example.foodplanner.category_details.presenter.CategoryDetailsPresenterImpl;
 import com.example.foodplanner.category_details.repository.CategoryDetailsRepository;
 import com.example.foodplanner.databinding.FragmentCategoryBinding;
-import com.example.foodplanner.home.pojo.Category;
-import com.example.foodplanner.home.presenter.HomePresenterImpl;
-import com.example.foodplanner.home.repository.HomeRepository;
-import com.example.foodplanner.home.view.AllCategoriesAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
