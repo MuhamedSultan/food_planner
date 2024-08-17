@@ -1,10 +1,12 @@
 package com.example.foodplanner.home.presenter;
 
 import com.example.foodplanner.api.NetworkCallback;
-import com.example.foodplanner.home.pojo.AllCategories;
-import com.example.foodplanner.home.pojo.Category;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.categories.AllCategories;
+import com.example.foodplanner.home.pojo.categories.Category;
+import com.example.foodplanner.home.pojo.countries.AllCountries;
+import com.example.foodplanner.home.pojo.countries.CountryMeal;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
+import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.example.foodplanner.home.repository.HomeRepository;
 import com.example.foodplanner.home.view.HomeView;
 
@@ -56,6 +58,27 @@ public class HomePresenterImpl implements  HomePresenter {
            }
            view.hideLoading();
             }
+
+            @Override
+            public void onFailureResult(String message) {
+                view.showErrorMessage(message);
+                view.hideLoading();
+            }
+        });
+    }
+
+    @Override
+    public void getAllCountries() {
+        view.showLoading();
+        homeRepository.getAllCountries(new NetworkCallback<AllCountries>() {
+            @Override
+            public void onSuccessResult(AllCountries result) {
+                List<CountryMeal> countryMeals=result.getMeals();
+                if (countryMeals!=null&&!countryMeals.isEmpty()) {
+                    view.showAllCountries(countryMeals);
+                }
+                view.hideLoading();
+                }
 
             @Override
             public void onFailureResult(String message) {

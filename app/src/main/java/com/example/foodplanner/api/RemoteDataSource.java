@@ -1,14 +1,11 @@
 package com.example.foodplanner.api;
 
-import android.annotation.SuppressLint;
-
 import com.example.foodplanner.category_details.pojo.CategoryMeals;
-import com.example.foodplanner.home.pojo.AllCategories;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
+import com.example.foodplanner.home.pojo.categories.AllCategories;
+import com.example.foodplanner.home.pojo.countries.AllCountries;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
@@ -51,6 +48,15 @@ public class RemoteDataSource {
     public void getMealDetailsById(NetworkCallback<DailyRandomMeal> callback, String id) {
         mealsClient.getApiService().getMealDetailsById(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(allMealsDetails -> {
                     callback.onSuccessResult(allMealsDetails);
+                }, throwable -> callback.onFailureResult(throwable.getMessage())
+        );
+    }
+
+    public void getAllCountries(NetworkCallback<AllCountries> callback) {
+        mealsClient.getApiService().getAllCountries()
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(allCountries -> {
+                    callback.onSuccessResult(allCountries);
                 }, throwable -> callback.onFailureResult(throwable.getMessage())
         );
     }

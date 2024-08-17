@@ -17,15 +17,19 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.MainActivity;
-import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentHomeBinding;
 import com.example.foodplanner.db.LocalDataSource;
-import com.example.foodplanner.home.pojo.Category;
-import com.example.foodplanner.home.pojo.Meal;
+import com.example.foodplanner.home.pojo.categories.Category;
+import com.example.foodplanner.home.pojo.countries.CountryMeal;
+import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.example.foodplanner.home.presenter.HomePresenter;
 import com.example.foodplanner.home.presenter.HomePresenterImpl;
 import com.example.foodplanner.home.repository.HomeRepository;
+import com.example.foodplanner.home.view.adapter.AllCategoriesAdapter;
+import com.example.foodplanner.home.view.adapter.AllCountriesAdapter;
+import com.example.foodplanner.home.view.adapter.CategoryClick;
+import com.example.foodplanner.home.view.adapter.CountryClick;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
@@ -33,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements HomeView, CategoryClick {
+public class HomeFragment extends Fragment implements HomeView, CategoryClick , CountryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
 
@@ -69,6 +73,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick {
         }
 
         presenter.getAllCategories();
+        presenter.getAllCountries();
     }
 
     @Override
@@ -79,6 +84,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick {
     @Override
     public void showMealsDetailsById(List<Meal> meals) {
        showMeal(meals);
+    }
+
+    @Override
+    public void showAllCountries(List<CountryMeal> countryMeals) {
+        setUpAllCountriesRecyclerview(countryMeals);
     }
 
     private void showMeal(List<Meal> mealsDetails){
@@ -124,6 +134,15 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick {
         adapter.setList(categories);
     }
 
+    private void setUpAllCountriesRecyclerview(List<CountryMeal> meals) {
+        AllCountriesAdapter adapter = new AllCountriesAdapter(meals, requireContext(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        binding.countriesRecyclerview.setAdapter(adapter);
+        binding.countriesRecyclerview.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        adapter.setList(meals);
+    }
+
     private void setActionBarUpButtonVisibility(boolean visible) {
         if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -137,5 +156,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick {
     public void onCategoryClick(String categoryName) {
         NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToCategoryFragment(categoryName);
         Navigation.findNavController(requireView()).navigate(navDirections);
+    }
+
+    @Override
+    public void onCountryClick(String countyName) {
+
     }
 }

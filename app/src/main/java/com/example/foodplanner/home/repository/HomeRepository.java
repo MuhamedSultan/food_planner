@@ -2,8 +2,9 @@ package com.example.foodplanner.home.repository;
 
 import com.example.foodplanner.api.NetworkCallback;
 import com.example.foodplanner.api.RemoteDataSource;
-import com.example.foodplanner.home.pojo.AllCategories;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
+import com.example.foodplanner.home.pojo.categories.AllCategories;
+import com.example.foodplanner.home.pojo.countries.AllCountries;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 
 public class HomeRepository {
     private final RemoteDataSource remoteDataSource;
@@ -30,6 +31,9 @@ public class HomeRepository {
     }
     public void getMealsDetailsById(NetworkCallback<DailyRandomMeal> callback, String id){
         remoteDataSource.getMealDetailsById(callback,id);
+    }
+    public void getAllCountries(NetworkCallback<AllCountries> callback){
+        remoteDataSource.getAllCountries(callback);
     }
 
 }

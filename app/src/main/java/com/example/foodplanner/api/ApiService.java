@@ -1,8 +1,9 @@
 package com.example.foodplanner.api;
 
 import com.example.foodplanner.category_details.pojo.CategoryMeals;
-import com.example.foodplanner.home.pojo.AllCategories;
-import com.example.foodplanner.home.pojo.DailyRandomMeal;
+import com.example.foodplanner.home.pojo.categories.AllCategories;
+import com.example.foodplanner.home.pojo.countries.AllCountries;
+import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
@@ -17,5 +18,7 @@ public interface ApiService {
     Single<CategoryMeals> getMealsByCategory(@Query("c") String categoryName);
     @GET("api/json/v1/1/lookup.php")
     Single<DailyRandomMeal> getMealDetailsById(@Query("i") String id);
+    @GET("api/json/v1/1/list.php?a=list")
+    Single<AllCountries> getAllCountries();
 
 }
