@@ -3,11 +3,21 @@ package com.example.foodplanner.db;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.internal.operators.completable.CompletableSubscribeOn;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LocalDataSource {
 
@@ -16,11 +26,15 @@ public class LocalDataSource {
     private static final String KEY_DATE = "meal_date";
     MealsDao mealsDao;
     Context context;
-    public LocalDataSource(Context context){
-        this.context=context;
-        mealsDao=MealsDatabase.getInstance(context).mealsDao();
+    CompositeDisposable disposable;
+
+    public LocalDataSource(Context context, CompositeDisposable disposable) {
+        this.context = context;
+        this.disposable = disposable;
+        mealsDao = MealsDatabase.getInstance(context).mealsDao();
 
     }
+
     public static void saveMealId(Context context, String mealId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -40,7 +54,14 @@ public class LocalDataSource {
     }
 
     public void addMealToFavorites(Meal meal) {
-        new Thread(() -> mealsDao.addMealToFavourite(meal)).start(); // Run on a background thread to avoid blocking the UI
+        disposable.add(mealsDao.addMealToFavourite(meal).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        );
+    }
+
+    public LiveData<List<Meal>> getFavouriteMeals() {
+    return   mealsDao.getFavouriteMeals();
     }
 
 }

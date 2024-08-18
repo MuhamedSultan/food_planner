@@ -113,7 +113,7 @@ public class HomePresenterImpl implements  HomePresenter {
     @Override
     public void addMealToFavorites(Meal meal) {
         homeRepository.addMealToFavorites(meal);
-        view.showMessage("Meal added to favorites!");  // Optionally, show a confirmation message
+        view.showMessage("Added Successfully to Favourite");
     }
 
 }

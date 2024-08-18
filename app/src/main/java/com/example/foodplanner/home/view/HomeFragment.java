@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
 public class HomeFragment extends Fragment implements HomeView, CategoryClick, CountryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
@@ -47,8 +49,9 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CompositeDisposable disposable=new CompositeDisposable();
         RemoteDataSource remoteDataSource = new RemoteDataSource();
-        localDataSource = new LocalDataSource(getContext());
+        localDataSource = new LocalDataSource(getContext(),disposable);
         HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource, localDataSource);
         presenter = new HomePresenterImpl(this, homeRepository);
     }
@@ -78,8 +81,6 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
         presenter.getAllCategories();
         presenter.getAllCountries();
-        binding.button.setOnClickListener(v -> {
-        });
 
     }
 
