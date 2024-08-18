@@ -7,6 +7,6 @@ public interface HomePresenter {
     void getAllMealDetailsById(String id);
     void getAllCategories();
     void getAllCountries();
-    void addMealToFavourite(Meal meal);
+    void addMealToFavorites(Meal meal);
 
 }

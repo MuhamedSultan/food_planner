@@ -14,4 +14,5 @@ public interface HomeView {
     void showErrorMessage(String message);
     void showLoading();
     void hideLoading();
+    void showMessage(String message);
 }

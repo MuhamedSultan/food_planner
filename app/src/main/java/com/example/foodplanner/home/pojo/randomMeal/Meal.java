@@ -1,11 +1,12 @@
 package com.example.foodplanner.home.pojo.randomMeal;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-public class Meal implements Parcelable {
+@Entity(tableName = "meals_table")
+public class Meal {
     private String strIngredient10;
     private String strIngredient12;
     private String strIngredient11;
@@ -14,6 +15,8 @@ public class Meal implements Parcelable {
     private String strIngredient13;
     private String strIngredient15;
     private String strArea;
+    @PrimaryKey
+    @NonNull
     private String idMeal;
     private String strInstructions;
     private String strIngredient1;
@@ -45,59 +48,6 @@ public class Meal implements Parcelable {
     private String strMeasure14;
     private String strMeasure15;
 
-    protected Meal(Parcel in) {
-        strIngredient10 = in.readString();
-        strIngredient12 = in.readString();
-        strIngredient11 = in.readString();
-        strIngredient14 = in.readString();
-        strCategory = in.readString();
-        strIngredient13 = in.readString();
-        strIngredient15 = in.readString();
-        strArea = in.readString();
-        idMeal = in.readString();
-        strInstructions = in.readString();
-        strIngredient1 = in.readString();
-        strIngredient3 = in.readString();
-        strIngredient2 = in.readString();
-        strIngredient5 = in.readString();
-        strIngredient4 = in.readString();
-        strIngredient7 = in.readString();
-        strIngredient6 = in.readString();
-        strIngredient9 = in.readString();
-        strIngredient8 = in.readString();
-        strMealThumb = in.readString();
-        strYoutube = in.readString();
-        strMeal = in.readString();
-        strMeasure12 = in.readString();
-        strMeasure13 = in.readString();
-        strMeasure10 = in.readString();
-        strMeasure11 = in.readString();
-        strSource = in.readString();
-        strMeasure9 = in.readString();
-        strMeasure7 = in.readString();
-        strMeasure8 = in.readString();
-        strMeasure5 = in.readString();
-        strMeasure6 = in.readString();
-        strMeasure3 = in.readString();
-        strMeasure4 = in.readString();
-        strMeasure1 = in.readString();
-        strMeasure2 = in.readString();
-        strMeasure14 = in.readString();
-        strMeasure15 = in.readString();
-    }
-
-    public static final Creator<Meal> CREATOR = new Creator<Meal>() {
-        @Override
-        public Meal createFromParcel(Parcel in) {
-            return new Meal(in);
-        }
-
-        @Override
-        public Meal[] newArray(int size) {
-            return new Meal[size];
-        }
-    };
-
     public String getStrIngredient10() { return strIngredient10; }
     public void setStrIngredient10(String value) { this.strIngredient10 = value; }
 
@@ -122,8 +72,8 @@ public class Meal implements Parcelable {
     public String getStrArea() { return strArea; }
     public void setStrArea(String value) { this.strArea = value; }
 
-    public String getidMeal() { return idMeal; }
-    public void setidMeal(String value) { this.idMeal = value; }
+    public String getIdMeal() { return idMeal; }
+    public void setIdMeal(String value) { this.idMeal = value; }
 
     public String getStrInstructions() { return strInstructions; }
     public void setStrInstructions(String value) { this.strInstructions = value; }
@@ -211,52 +161,4 @@ public class Meal implements Parcelable {
 
     public String getStrMeasure15() { return strMeasure15; }
     public void setStrMeasure15(String value) { this.strMeasure15 = value; }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(strIngredient10);
-        dest.writeString(strIngredient12);
-        dest.writeString(strIngredient11);
-        dest.writeString(strIngredient14);
-        dest.writeString(strCategory);
-        dest.writeString(strIngredient13);
-        dest.writeString(strIngredient15);
-        dest.writeString(strArea);
-        dest.writeString(idMeal);
-        dest.writeString(strInstructions);
-        dest.writeString(strIngredient1);
-        dest.writeString(strIngredient3);
-        dest.writeString(strIngredient2);
-        dest.writeString(strIngredient5);
-        dest.writeString(strIngredient4);
-        dest.writeString(strIngredient7);
-        dest.writeString(strIngredient6);
-        dest.writeString(strIngredient9);
-        dest.writeString(strIngredient8);
-        dest.writeString(strMealThumb);
-        dest.writeString(strYoutube);
-        dest.writeString(strMeal);
-        dest.writeString(strMeasure12);
-        dest.writeString(strMeasure13);
-        dest.writeString(strMeasure10);
-        dest.writeString(strMeasure11);
-        dest.writeString(strSource);
-        dest.writeString(strMeasure9);
-        dest.writeString(strMeasure7);
-        dest.writeString(strMeasure8);
-        dest.writeString(strMeasure5);
-        dest.writeString(strMeasure6);
-        dest.writeString(strMeasure3);
-        dest.writeString(strMeasure4);
-        dest.writeString(strMeasure1);
-        dest.writeString(strMeasure2);
-        dest.writeString(strMeasure14);
-        dest.writeString(strMeasure15);
-    }
 }
-

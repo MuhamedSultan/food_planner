@@ -97,7 +97,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/strCategory" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/addToFavourite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -148,11 +148,27 @@
             app:layout_constraintTop_toBottomOf="@+id/dailyMealCardView" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categoriesRecyclerview"
+            android:id="@+id/countriesRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="8dp"
+            android:text="@string/all_countries"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/flag_ic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/allCategoriesRecyclerView" />
 

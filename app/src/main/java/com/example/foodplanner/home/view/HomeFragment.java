@@ -37,15 +37,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements HomeView, CategoryClick , CountryClick {
+public class HomeFragment extends Fragment implements HomeView, CategoryClick, CountryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
+    LocalDataSource localDataSource;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RemoteDataSource remoteDataSource = new RemoteDataSource();
-        HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource);
+        localDataSource = new LocalDataSource(getContext());
+        HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource, localDataSource);
         presenter = new HomePresenterImpl(this, homeRepository);
     }
 
@@ -74,16 +78,19 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick , 
 
         presenter.getAllCategories();
         presenter.getAllCountries();
+        binding.button.setOnClickListener(v -> {
+        });
+
     }
 
     @Override
     public void showDailyRandomMealData(List<Meal> meals) {
-       showMeal(meals);
+        showMeal(meals);
     }
 
     @Override
     public void showMealsDetailsById(List<Meal> meals) {
-       showMeal(meals);
+        showMeal(meals);
     }
 
     @Override
@@ -91,23 +98,28 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick , 
         setUpAllCountriesRecyclerview(countryMeals);
     }
 
-    private void showMeal(List<Meal> mealsDetails){
+
+    private void showMeal(List<Meal> mealsDetails) {
         Meal meal = mealsDetails.get(0);
-        LocalDataSource.saveMealId(requireContext(), meal.getidMeal());
+        LocalDataSource.saveMealId(requireContext(), meal.getIdMeal());
         Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
         binding.strMeal.setText(meal.getStrMeal());
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
-        binding.dailyMealCardView.setOnClickListener(v -> {
-            NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getidMeal());
+
+        binding.addToFavourite.setOnClickListener(v -> presenter.addMealToFavorites(meal));
+
+
+        binding.imageView2.setOnClickListener(v -> {
+            NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
             Navigation.findNavController(v).navigate(navDirections);
         });
     }
+
     @Override
     public void showAllCategories(List<Category> categories) {
         setUpAllCategoriesRecyclerview(categories);
     }
-
 
 
     @Override
@@ -123,6 +135,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick , 
     @Override
     public void hideLoading() {
         binding.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(requireView(),message,Snackbar.LENGTH_LONG).show();
     }
 
     private void setUpAllCategoriesRecyclerview(List<Category> categories) {
@@ -160,7 +177,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick , 
 
     @Override
     public void onCountryClick(String countyName) {
-        NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToCountryRecipesFragment(countyName);
+        NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToCountryRecipesFragment(countyName);
         Navigation.findNavController(requireView()).navigate(navDirections);
     }
 }
