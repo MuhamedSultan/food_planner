@@ -35,8 +35,6 @@ app:cardCornerRadius="16dp"
             android:maxLines="2"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-
-            android:text="fdsgdadsfvdg"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"

@@ -24,21 +24,27 @@ import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenterImpl;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
+import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
 
 public class MealDetailsFragment extends Fragment implements MealsDetailsView{
     private FragmentMealDetailsBinding binding;
     private MealsDetailsPresenter presenter;
+    private CompositeDisposable disposable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disposable=new CompositeDisposable();
         RemoteDataSource remoteDataSource=new RemoteDataSource();
-        MealsDetailsRepository repository=new MealsDetailsRepository(remoteDataSource);
+        LocalDataSource localDataSource=new LocalDataSource(requireContext(),disposable);
+        MealsDetailsRepository repository=new MealsDetailsRepository(remoteDataSource,localDataSource);
         presenter=new MealsDetailsPresenterImpl(this,repository);
 
     }
@@ -55,8 +61,6 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         super.onViewCreated(view, savedInstanceState);
         MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
         String mealId = args.getMealID();
-
-
         presenter.getAllMealDetailsById(mealId);
 
     }
@@ -99,6 +103,9 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         setUpRecyclerview(ingredientItem.getIngredients(meal));
         binding.tvInstructions.setText(meal.getStrInstructions());
         playYoutubeVideo(meal.getStrYoutube());
+        binding.addToFavourite.setOnClickListener(v->{
+            presenter.addMealToFavorites(meal);
+        });
     }
 
     @Override

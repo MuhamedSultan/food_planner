@@ -40,4 +40,9 @@ public class MealsDetailsPresenterImpl implements MealsDetailsPresenter{
        },id);
 
     }
+
+    @Override
+    public void addMealToFavorites(Meal meal) {
+        repository.addMealToFavorites(meal);
+    }
 }
