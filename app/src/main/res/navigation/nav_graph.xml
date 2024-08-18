@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_homeFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_countryRecipesFragment"
+            app:destination="@id/countryRecipesFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -103,6 +106,18 @@
             app:argType="string" />
         <action
             android:id="@+id/action_categoryFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/countryRecipesFragment"
+        android:name="com.example.foodplanner.countries_recipes.view.CountryRecipesFragment"
+        android:label="fragment_country_recipes"
+        tools:layout="@layout/fragment_country_recipes" >
+        <argument
+            android:name="CountryName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_countryRecipesFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
     </fragment>
 </navigation>

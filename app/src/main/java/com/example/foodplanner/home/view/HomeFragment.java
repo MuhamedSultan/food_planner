@@ -160,6 +160,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick , 
 
     @Override
     public void onCountryClick(String countyName) {
-
+        NavDirections navDirections=HomeFragmentDirections.actionHomeFragmentToCountryRecipesFragment(countyName);
+        Navigation.findNavController(requireView()).navigate(navDirections);
     }
 }

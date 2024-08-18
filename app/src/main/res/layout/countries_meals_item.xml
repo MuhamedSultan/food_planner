@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/categoryMealItem"
     android:layout_margin="8dp"
-app:cardCornerRadius="16dp"
+    app:cardCornerRadius="16dp"
     android:elevation="32dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,8 +35,6 @@ app:cardCornerRadius="16dp"
             android:maxLines="2"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-
-            android:text="fdsgdadsfvdg"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
