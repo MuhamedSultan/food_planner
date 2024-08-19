@@ -22,4 +22,9 @@ public class FavouritePresenterImpl implements FavouritePresenter{
     public LiveData<List<Meal>> getFavouriteMeals() {
        return repository.getFavouriteMeals();
     }
+
+    @Override
+    public LiveData<List<Meal>> getFavouriteMealsFromFirebase(String userId) {
+        return repository.getFavouriteMealsFromFirebase(userId);
+    }
 }

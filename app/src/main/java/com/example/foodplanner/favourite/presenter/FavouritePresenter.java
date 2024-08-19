@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface FavouritePresenter {
      LiveData<List<Meal>> getFavouriteMeals();
-}
+      LiveData<List<Meal>> getFavouriteMealsFromFirebase(String userId);
+     }

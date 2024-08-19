@@ -19,6 +19,10 @@ import com.example.foodplanner.favourite.presenter.FavouritePresenter;
 import com.example.foodplanner.favourite.presenter.FavouritePresenterImpl;
 import com.example.foodplanner.favourite.repository.FavouriteRepository;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -27,11 +31,16 @@ public class FavouriteFragment extends Fragment implements FavouriteView {
     private FragmentFavouriteBinding binding;
     private FavouritePresenter presenter;
     private CompositeDisposable disposable;
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        disposable = new CompositeDisposable();
+        LocalDataSource localDataSource = new LocalDataSource(requireContext(), disposable);
+        FavouriteRepository repository = FavouriteRepository.getInstance(localDataSource);
+        presenter = new FavouritePresenterImpl(this, repository);
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -44,12 +53,13 @@ public class FavouriteFragment extends Fragment implements FavouriteView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        disposable = new CompositeDisposable();
-        LocalDataSource localDataSource = new LocalDataSource(requireContext(), disposable);
-        FavouriteRepository repository = FavouriteRepository.getInstance(localDataSource);
-        presenter = new FavouritePresenterImpl(this, repository);
-        presenter.getFavouriteMeals();
-        presenter.getFavouriteMeals().observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
+
+       presenter.getFavouriteMeals().observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
+        if (currentUser != null) {
+            presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
+        }else {
+            Snackbar.make(requireView(),"Error",Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void setupFavourite(List<Meal> mealList) {
