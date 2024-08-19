@@ -54,9 +54,10 @@ public class FavouriteFragment extends Fragment implements FavouriteView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       presenter.getFavouriteMeals().observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
         if (currentUser != null) {
             presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
+            presenter.getFavouriteMeals(currentUser.getUid()).observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
+
         }else {
             Snackbar.make(requireView(),"Error",Snackbar.LENGTH_LONG).show();
         }

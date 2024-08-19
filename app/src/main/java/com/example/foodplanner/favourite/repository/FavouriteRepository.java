@@ -32,8 +32,8 @@ public class FavouriteRepository {
         return instance;
     }
 
-    public LiveData<List<Meal>> getFavouriteMeals() {
-        return localDataSource.getFavouriteMeals();
+    public LiveData<List<Meal>> getFavouriteMeals( String userId) {
+        return localDataSource.getFavouriteMeals(userId);
     }
 
     public LiveData<List<Meal>> getFavouriteMealsFromFirebase(String userId) {
@@ -53,7 +53,7 @@ public class FavouriteRepository {
                         liveData.setValue(mealList);
                     } else {
                         Log.e("FavouriteRepository", "Error getting documents: ", task.getException());
-                       // liveData.setValue(new ArrayList<>());
+                        liveData.setValue(new ArrayList<>());
                     }
                 });
         return liveData;

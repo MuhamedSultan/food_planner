@@ -81,8 +81,8 @@ public class LocalDataSource {
         );
     }
 
-    public LiveData<List<Meal>> getFavouriteMeals() {
-        return mealsDao.getFavouriteMeals();
+    public LiveData<List<Meal>> getFavouriteMeals(String userId) {
+        return mealsDao.getFavouriteMeals(userId);
     }
 
     public void deleteMealFromFavourite(Meal meal) {

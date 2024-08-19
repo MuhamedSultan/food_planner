@@ -19,8 +19,8 @@ public interface MealsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable addMealToFavourite(Meal meal);
 
-    @Query("SELECT * FROM MEALS_TABLE")
-    LiveData<List<Meal>> getFavouriteMeals();
+    @Query("SELECT * FROM MEALS_TABLE where userId =:userId")
+    LiveData<List<Meal>> getFavouriteMeals(String userId);
 
     @Delete
     Completable deleteMealFromFavourite(Meal meal);

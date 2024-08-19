@@ -19,8 +19,8 @@ public class FavouritePresenterImpl implements FavouritePresenter{
     }
 
     @Override
-    public LiveData<List<Meal>> getFavouriteMeals() {
-       return repository.getFavouriteMeals();
+    public LiveData<List<Meal>> getFavouriteMeals(String userId) {
+       return repository.getFavouriteMeals(userId);
     }
 
     @Override
