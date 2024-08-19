@@ -8,6 +8,9 @@ public interface HomePresenter {
     void getAllCategories();
     void getAllCountries();
     void addMealToFavorites(Meal meal);
+    void addMealToFavoritesToFirebase(String userId,Meal meal);
     void deleteMealToFavorites(Meal meal);
+    void deleteMealFromFavoritesFromFirebase(String userId,Meal meal);
+
 
 }

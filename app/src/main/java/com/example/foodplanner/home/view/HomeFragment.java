@@ -32,6 +32,8 @@ import com.example.foodplanner.home.view.adapter.AllCountriesAdapter;
 import com.example.foodplanner.home.view.adapter.CategoryClick;
 import com.example.foodplanner.home.view.adapter.CountryClick;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +46,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     FragmentHomeBinding binding;
     private HomePresenter presenter;
     LocalDataSource localDataSource;
+    FirebaseUser currentUser;
 
 
 
@@ -55,6 +58,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         localDataSource = new LocalDataSource(getContext(),disposable);
         HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource, localDataSource);
         presenter = new HomePresenterImpl(this, homeRepository);
+        currentUser=FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -116,8 +120,12 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
             if (meal.isFavourite) {
                 presenter.addMealToFavorites(meal);
                 binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
+               if (currentUser!=null) {
+                   presenter.addMealToFavoritesToFirebase(currentUser.getUid(),meal);
+               }
             } else {
                 presenter.deleteMealToFavorites(meal);
+                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
                 binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
             }
         });

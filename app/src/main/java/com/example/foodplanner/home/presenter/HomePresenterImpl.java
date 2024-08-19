@@ -117,10 +117,20 @@ public class HomePresenterImpl implements  HomePresenter {
     }
 
     @Override
+    public void addMealToFavoritesToFirebase(String userId,Meal meal) {
+        homeRepository.addMealToFavoritesToFirebase(userId,meal);
+    }
+
+    @Override
     public void deleteMealToFavorites(Meal meal) {
         homeRepository.deleteMealToFavorites(meal);
         view.showMessage("Deleted Successfully from Favourite");
 
+    }
+
+    @Override
+    public void deleteMealFromFavoritesFromFirebase(String userId, Meal meal) {
+        homeRepository.deleteMealFromFavoritesFromFirebase(userId,meal);
     }
 
 }
