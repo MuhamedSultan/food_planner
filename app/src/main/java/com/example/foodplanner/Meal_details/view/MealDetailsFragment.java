@@ -111,22 +111,30 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         setUpRecyclerview(ingredientItem.getIngredients(meal));
         binding.tvInstructions.setText(meal.getStrInstructions());
         playYoutubeVideo(meal.getStrYoutube());
+
+        boolean isFavorite = LocalDataSource.isMealFavorite(requireContext(), meal.getIdMeal());
+        meal.isFavourite = isFavorite;
+        binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);
+
         binding.addToFavourite.setOnClickListener(v -> {
             meal.isFavourite = !meal.isFavourite;
 
             if (meal.isFavourite) {
                 presenter.addMealToFavorites(meal);
                 binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
-                if (currentUser!=null) {
-                    presenter.addMealToFavoritesToFirebase(currentUser.getUid(),meal);
+                if (currentUser != null) {
+                    presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
                 }
             } else {
                 presenter.deleteMealToFavorites(meal);
-                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
+                if (currentUser != null) {
+                    presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+                }
                 binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
             }
-        });
 
+            LocalDataSource.setMealFavoriteStatus(requireContext(), meal.getIdMeal(), meal.isFavourite);
+        });
     }
 
     @Override

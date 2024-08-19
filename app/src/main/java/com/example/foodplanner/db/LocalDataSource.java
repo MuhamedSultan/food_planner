@@ -2,6 +2,7 @@ package com.example.foodplanner.db;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -26,6 +27,7 @@ public class LocalDataSource {
     private static final String KEY_MEAL_ID = "meal_id";
     private static final String KEY_DATE = "meal_date";
     private static final String KEY_EMAIL = "user_email";
+    private static final String KEY_FAVORITES = "favorites";
     MealsDao mealsDao;
     Context context;
     CompositeDisposable disposable;
@@ -74,6 +76,22 @@ public class LocalDataSource {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getString(KEY_DATE, null);
     }
+
+    public static void setMealFavoriteStatus(Context context, String mealId, boolean isFavorite) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(KEY_FAVORITES + "_" + mealId, isFavorite);
+        editor.apply();
+    }
+
+    public static boolean isMealFavorite(Context context, String mealId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean isFavorite = prefs.getBoolean(KEY_FAVORITES + "_" + mealId, false);
+        Log.d("LocalDataSource", "Meal ID: " + mealId + " isFavorite: " + isFavorite);
+        return isFavorite;
+    }
+
+
 
     public void addMealToFavorites(Meal meal) {
         disposable.add(mealsDao.addMealToFavourite(meal).subscribeOn(Schedulers.io())

@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -86,8 +88,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
         presenter.getAllCategories();
         presenter.getAllCountries();
-
     }
+
+
+
 
     @Override
     public void showDailyRandomMealData(List<Meal> meals) {
@@ -108,28 +112,35 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     private void showMeal(List<Meal> mealsDetails) {
         Meal meal = mealsDetails.get(0);
         LocalDataSource.saveMealId(requireContext(), meal.getIdMeal());
+
         Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
         binding.strMeal.setText(meal.getStrMeal());
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
 
+        // Set favorite icon based on saved status
+        boolean isFavorite = LocalDataSource.isMealFavorite(requireContext(), meal.getIdMeal());
+        meal.isFavourite = isFavorite;
+        binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);
 
         binding.addToFavourite.setOnClickListener(v -> {
             meal.isFavourite = !meal.isFavourite;
-
             if (meal.isFavourite) {
                 presenter.addMealToFavorites(meal);
+                LocalDataSource.setMealFavoriteStatus(requireContext(), meal.getIdMeal(), true);
                 binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
-               if (currentUser!=null) {
-                   presenter.addMealToFavoritesToFirebase(currentUser.getUid(),meal);
-               }
+                if (currentUser != null) {
+                    presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
+                }
             } else {
                 presenter.deleteMealToFavorites(meal);
-                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
+                LocalDataSource.setMealFavoriteStatus(requireContext(), meal.getIdMeal(), false);
                 binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
+                if (currentUser != null) {
+                    presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+                }
             }
         });
-
 
         binding.imageView2.setOnClickListener(v -> {
             NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
@@ -145,7 +156,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
     @Override
     public void showErrorMessage(String message) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -202,5 +213,5 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         Navigation.findNavController(requireView()).navigate(navDirections);
     }
 
-   
+
 }
