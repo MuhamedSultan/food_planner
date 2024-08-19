@@ -24,15 +24,29 @@ public class LocalDataSource {
     private static final String PREFS_NAME = "FoodPlannerPrefs";
     private static final String KEY_MEAL_ID = "meal_id";
     private static final String KEY_DATE = "meal_date";
+    private static final String KEY_EMAIL = "user_email";
     MealsDao mealsDao;
     Context context;
     CompositeDisposable disposable;
+
 
     public LocalDataSource(Context context, CompositeDisposable disposable) {
         this.context = context;
         this.disposable = disposable;
         mealsDao = MealsDatabase.getInstance(context).mealsDao();
 
+    }
+
+    public static void saveUser(Context context,String email){
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_EMAIL, email);
+        editor.apply();
+    }
+
+    public static String getSavedUser(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_EMAIL, null);
     }
 
     public static void saveMealId(Context context, String mealId) {

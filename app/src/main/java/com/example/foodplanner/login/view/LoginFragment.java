@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.databinding.FragmentLoginBinding;
+import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.login.LoginPresenterImpl;
 import com.example.foodplanner.login.pojo.User;
 import com.example.foodplanner.util.CustomAlertDialog;
@@ -50,6 +51,7 @@ private CustomAlertDialog customAlertDialog;
             if (validateInput(email,password)) {
                 User user = new User(email, password);
                 loginPresenter.loginWithEmail(user);
+                LocalDataSource.saveUser(getContext(),user.getEmail());
             }
         });
     }

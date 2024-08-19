@@ -8,6 +8,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 
 import com.example.foodplanner.databinding.ActivityMainBinding;
+import com.example.foodplanner.db.LocalDataSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser=firebaseAuth.getCurrentUser();
-        if (currentUser!=null){
+        if (LocalDataSource.getSavedUser(this) !=null){
             navController.navigate(R.id.homeFragment);
         }else {
             navController.navigate(R.id.authFragment);
