@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/favouriteIcon"
             android:layout_width="39dp"
             android:layout_height="43dp"
             android:layout_marginTop="8dp"

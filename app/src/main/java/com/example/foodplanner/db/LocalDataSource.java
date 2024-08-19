@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.internal.operators.completable.CompletableSubscribeOn;
@@ -86,9 +87,7 @@ public class LocalDataSource {
     }
 
     public void deleteMealFromFavourite(Meal meal) {
-        disposable.add(mealsDao.deleteMealFromFavourite(meal)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+         mealsDao.deleteMealFromFavourite(meal);
     }
 
 }

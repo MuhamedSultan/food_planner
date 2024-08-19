@@ -27,11 +27,12 @@ import java.util.List;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 
-public class FavouriteFragment extends Fragment implements FavouriteView {
+public class FavouriteFragment extends Fragment implements FavouriteView ,FavouriteClick{
     private FragmentFavouriteBinding binding;
     private FavouritePresenter presenter;
     private CompositeDisposable disposable;
     FirebaseUser currentUser;
+    FavouriteAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,20 +56,20 @@ public class FavouriteFragment extends Fragment implements FavouriteView {
         super.onViewCreated(view, savedInstanceState);
 
         if (currentUser != null) {
-            presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
-            presenter.getFavouriteMeals(currentUser.getUid()).observe(getViewLifecycleOwner(), meals -> setupFavourite(meals));
-
-        }else {
-            Snackbar.make(requireView(),"Error",Snackbar.LENGTH_LONG).show();
+            presenter.getFavouriteMeals(currentUser.getUid()).observe(getViewLifecycleOwner(), this::setupFavourite);
+            presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), this::setupFavourite);
+        } else {
+            Snackbar.make(requireView(), "Error", Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void setupFavourite(List<Meal> mealList) {
-        FavouriteAdapter adapter = new FavouriteAdapter(mealList, requireContext());
+         adapter = new FavouriteAdapter(mealList, requireContext(),this);
         LinearLayoutManager layoutManager = new GridLayoutManager(requireContext(),2);
         binding.favouriteRecyclerview.setAdapter(adapter);
         binding.favouriteRecyclerview.setLayoutManager(layoutManager);
         adapter.setList(mealList);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -81,4 +82,12 @@ public class FavouriteFragment extends Fragment implements FavouriteView {
     public void hideLoading() {
 
     }
+
+    public void onFavouriteClick(Meal meal) {
+        presenter.deleteMealFromFavourite(meal);
+        presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
+        adapter.mealList.remove(meal);
+        adapter.notifyDataSetChanged();
+    }
+
 }

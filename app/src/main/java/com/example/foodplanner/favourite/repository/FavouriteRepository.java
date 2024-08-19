@@ -14,6 +14,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+
 public class FavouriteRepository {
 
    private LocalDataSource localDataSource;
@@ -53,10 +55,26 @@ public class FavouriteRepository {
                         liveData.setValue(mealList);
                     } else {
                         Log.e("FavouriteRepository", "Error getting documents: ", task.getException());
-                        liveData.setValue(new ArrayList<>());
+                       // liveData.setValue(new ArrayList<>());
                     }
                 });
         return liveData;
+    }
+
+    public void addMealToFavorites(Meal meal) {
+        localDataSource.addMealToFavorites(meal);
+    }
+
+    public void deleteMealFromFavorites( Meal meal) {
+
+         localDataSource.deleteMealFromFavourite(meal);
+    }
+    public void deleteMealFromFavoritesFromFirebase(String userId,Meal meal) {
+
+        localDataSource.addMealToFavorites(meal);
+        firestore.collection("users").document(userId)
+                .collection("favorites").document(meal.getIdMeal())
+                .delete();
     }
 
 }

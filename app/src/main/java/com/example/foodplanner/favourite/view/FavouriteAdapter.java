@@ -19,9 +19,11 @@ import java.util.List;
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHolder> {
    List<Meal> mealList;
    Context context;
-   public FavouriteAdapter(List<Meal> mealList,Context context){
+   FavouriteClick favouriteClick;
+   public FavouriteAdapter(List<Meal> mealList,Context context,FavouriteClick favouriteClick){
        this.mealList=mealList;
        this.context=context;
+       this.favouriteClick=favouriteClick;
    }
     @NonNull
     @Override
@@ -35,6 +37,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
        Meal meal=mealList.get(position);
         Glide.with(context).load(meal.getStrMealThumb()).into(holder.favouriteImage);
         holder.tvFavourite.setText(meal.getStrMeal());
+        holder.favoriteIcon.setOnClickListener(v->{
+            favouriteClick.onFavouriteClick(meal);
+        });
     }
 
     @Override
@@ -47,13 +52,14 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
        notifyDataSetChanged();
     }
     class FavouriteViewHolder extends RecyclerView.ViewHolder {
-        ImageView favouriteImage;
+        ImageView favouriteImage,favoriteIcon;
         TextView tvFavourite;
 
         public FavouriteViewHolder(@NonNull View itemView) {
             super(itemView);
             favouriteImage=itemView.findViewById(R.id.favouriteImage);
             tvFavourite=itemView.findViewById(R.id.tvFavourite);
+            favoriteIcon=itemView.findViewById(R.id.favouriteIcon);
         }
     }
 }

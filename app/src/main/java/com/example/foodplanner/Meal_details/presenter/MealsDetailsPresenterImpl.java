@@ -8,41 +8,61 @@ import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 
-public class MealsDetailsPresenterImpl implements MealsDetailsPresenter{
+public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
 
-   private MealsDetailsView view;
-   private MealsDetailsRepository repository;
-   public MealsDetailsPresenterImpl(MealsDetailsView view,MealsDetailsRepository repository){
-       this.view=view;
-       this.repository=repository;
-   }
+    private MealsDetailsView view;
+    private MealsDetailsRepository repository;
 
+    public MealsDetailsPresenterImpl(MealsDetailsView view, MealsDetailsRepository repository) {
+        this.view = view;
+        this.repository = repository;
+    }
 
 
     @Override
     public void getAllMealDetailsById(String id) {
-       view.showLoading();
-       repository.getMealsDetailsById(new NetworkCallback<DailyRandomMeal>() {
-           @Override
-           public void onSuccessResult(DailyRandomMeal result) {
-               List<Meal> mealList=result.getMeals();
-               if (mealList!=null&&!mealList.isEmpty()) {
-                   view.showMealsDetailsById(mealList);
-               }
-               view.hideLoading();
-           }
+        view.showLoading();
+        repository.getMealsDetailsById(new NetworkCallback<DailyRandomMeal>() {
+            @Override
+            public void onSuccessResult(DailyRandomMeal result) {
+                List<Meal> mealList = result.getMeals();
+                if (mealList != null && !mealList.isEmpty()) {
+                    view.showMealsDetailsById(mealList);
+                }
+                view.hideLoading();
+            }
 
-           @Override
-           public void onFailureResult(String message) {
-               view.showErrorMessage(message);
-               view.hideLoading();
-           }
-       },id);
+            @Override
+            public void onFailureResult(String message) {
+                view.showMessage(message);
+                view.hideLoading();
+            }
+        }, id);
 
     }
 
     @Override
     public void addMealToFavorites(Meal meal) {
         repository.addMealToFavorites(meal);
+        view.showMessage("Added Successfully To Favourite");
     }
+
+    @Override
+    public void deleteMealToFavorites(Meal meal) {
+        repository.deleteMealToFavorites(meal);
+        view.showMessage("Deleted Successfully from Favourite");
+
+    }
+
+    @Override
+    public void addMealToFavoritesToFirebase(String userId, Meal meal) {
+        repository.addMealToFavoritesToFirebase(userId, meal);
+    }
+
+    @Override
+    public void deleteMealFromFavoritesFromFirebase(String userId, Meal meal) {
+        repository.deleteMealFromFavoritesFromFirebase(userId, meal);
+
+    }
+
 }

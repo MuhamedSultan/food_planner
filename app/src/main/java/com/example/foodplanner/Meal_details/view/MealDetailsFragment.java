@@ -22,11 +22,14 @@ import com.example.foodplanner.Meal_details.pojo.Ingredients;
 import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenter;
 import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenterImpl;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
+import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -37,6 +40,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
     private FragmentMealDetailsBinding binding;
     private MealsDetailsPresenter presenter;
     private CompositeDisposable disposable;
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         LocalDataSource localDataSource=new LocalDataSource(requireContext(),disposable);
         MealsDetailsRepository repository=new MealsDetailsRepository(remoteDataSource,localDataSource);
         presenter=new MealsDetailsPresenterImpl(this,repository);
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
 
     }
 
@@ -62,6 +67,9 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
         String mealId = args.getMealID();
         presenter.getAllMealDetailsById(mealId);
+
+
+
 
     }
 
@@ -103,14 +111,27 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView{
         setUpRecyclerview(ingredientItem.getIngredients(meal));
         binding.tvInstructions.setText(meal.getStrInstructions());
         playYoutubeVideo(meal.getStrYoutube());
-        binding.addToFavourite.setOnClickListener(v->{
-            presenter.addMealToFavorites(meal);
+        binding.addToFavourite.setOnClickListener(v -> {
+            meal.isFavourite = !meal.isFavourite;
+
+            if (meal.isFavourite) {
+                presenter.addMealToFavorites(meal);
+                binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
+                if (currentUser!=null) {
+                    presenter.addMealToFavoritesToFirebase(currentUser.getUid(),meal);
+                }
+            } else {
+                presenter.deleteMealToFavorites(meal);
+                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
+                binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
+            }
         });
+
     }
 
     @Override
-    public void showErrorMessage(String message) {
-
+    public void showMessage(String message) {
+        Snackbar.make(requireView(),message,Snackbar.LENGTH_LONG).show();
     }
 
     @Override
