@@ -43,4 +43,8 @@ public class HomeRepository {
     public void addMealToFavorites(Meal meal) {
         localDataSource.addMealToFavorites(meal);
     }
+    public void deleteMealToFavorites(Meal meal) {
+        localDataSource.deleteMealFromFavourite(meal);
+    }
+
 }

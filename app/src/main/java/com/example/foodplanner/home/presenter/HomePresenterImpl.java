@@ -116,4 +116,11 @@ public class HomePresenterImpl implements  HomePresenter {
         view.showMessage("Added Successfully to Favourite");
     }
 
+    @Override
+    public void deleteMealToFavorites(Meal meal) {
+        homeRepository.deleteMealToFavorites(meal);
+        view.showMessage("Deleted Successfully from Favourite");
+
+    }
+
 }

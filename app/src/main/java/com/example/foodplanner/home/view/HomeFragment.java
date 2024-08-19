@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.MainActivity;
+import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentHomeBinding;
 import com.example.foodplanner.db.LocalDataSource;
@@ -108,7 +109,18 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
 
-        binding.addToFavourite.setOnClickListener(v -> presenter.addMealToFavorites(meal));
+
+        binding.addToFavourite.setOnClickListener(v -> {
+            meal.isFavourite = !meal.isFavourite;
+
+            if (meal.isFavourite) {
+                presenter.addMealToFavorites(meal);
+                binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
+            } else {
+                presenter.deleteMealToFavorites(meal);
+                binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
+            }
+        });
 
 
         binding.imageView2.setOnClickListener(v -> {
@@ -181,4 +193,6 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToCountryRecipesFragment(countyName);
         Navigation.findNavController(requireView()).navigate(navDirections);
     }
+
+   
 }

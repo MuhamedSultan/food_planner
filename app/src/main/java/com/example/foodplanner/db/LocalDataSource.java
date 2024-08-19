@@ -61,7 +61,13 @@ public class LocalDataSource {
     }
 
     public LiveData<List<Meal>> getFavouriteMeals() {
-    return   mealsDao.getFavouriteMeals();
+        return mealsDao.getFavouriteMeals();
+    }
+
+    public void deleteMealFromFavourite(Meal meal) {
+        disposable.add(mealsDao.deleteMealFromFavourite(meal)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 
 }

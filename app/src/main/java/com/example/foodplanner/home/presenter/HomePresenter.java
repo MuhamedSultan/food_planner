@@ -8,5 +8,6 @@ public interface HomePresenter {
     void getAllCategories();
     void getAllCountries();
     void addMealToFavorites(Meal meal);
+    void deleteMealToFavorites(Meal meal);
 
 }
