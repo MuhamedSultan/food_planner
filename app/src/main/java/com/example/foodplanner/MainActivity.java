@@ -1,11 +1,14 @@
 package com.example.foodplanner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.foodplanner.databinding.ActivityMainBinding;
 import com.example.foodplanner.db.LocalDataSource;
@@ -42,5 +45,21 @@ public class MainActivity extends AppCompatActivity {
         }else {
             navController.navigate(R.id.authFragment);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.signOut){
+            LocalDataSource.clearUser(this);
+            navController.navigate(R.id.loginFragment);
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }
