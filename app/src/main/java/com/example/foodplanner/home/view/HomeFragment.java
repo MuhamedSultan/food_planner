@@ -118,7 +118,6 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
 
-        // Set favorite icon based on saved status
         boolean isFavorite = LocalDataSource.isMealFavorite(requireContext(), meal.getIdMeal());
         meal.isFavourite = isFavorite;
         binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);

@@ -1,5 +1,6 @@
 package com.example.foodplanner.countries_recipes.view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,8 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +30,18 @@ import com.example.foodplanner.countries_recipes.repository.CountryRecipesReposi
 import com.example.foodplanner.databinding.FragmentCountryRecipesBinding;
 import com.example.foodplanner.home.view.adapter.CountryClick;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CountryRecipesFragment extends Fragment implements CountryRecipesView, CountryRecipesMealClick {
     private FragmentCountryRecipesBinding binding;
     private CountryRecipesPresenter presenter;
+    List<CountryRecipesMeal> allMeals;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,7 @@ public class CountryRecipesFragment extends Fragment implements CountryRecipesVi
         RemoteDataSource remoteDataSource = new RemoteDataSource();
         CountryRecipesRepository repository = CountryRecipesRepository.getInstance(remoteDataSource);
         presenter = new CountryRecipesPresenterImpl(this, repository);
+        allMeals=new ArrayList<>();
     }
 
     @Override
@@ -55,11 +66,14 @@ public class CountryRecipesFragment extends Fragment implements CountryRecipesVi
         String countryName =args.getCountryName();
         presenter.getCountryRecipes(countryName);
         binding.tvMeals.setText(countryName+" Meals");
+        setupSearch();
+
     }
 
 
     @Override
     public void showCountryRecipesList(List<CountryRecipesMeal> countryRecipesMeals) {
+        allMeals=countryRecipesMeals;
         setupCountryMealsRecyclerview(countryRecipesMeals);
     }
 
@@ -77,6 +91,36 @@ public class CountryRecipesFragment extends Fragment implements CountryRecipesVi
     @Override
     public void hideLoading() {
 
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void setupSearch() {
+        Observable.create(emitter -> binding.edSearch.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        List<CountryRecipesMeal> filteredMeals = new ArrayList<>();
+                        for (CountryRecipesMeal meal : allMeals) {
+                            if (meal.getStrMeal().toLowerCase().startsWith(s.toString().toLowerCase())) {
+                                filteredMeals.add(meal);
+                            }
+                        }
+                        emitter.onNext(filteredMeals);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                })).debounce(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(filteredMeals -> {
+                  setupCountryMealsRecyclerview((List<CountryRecipesMeal>) filteredMeals);
+                });
     }
 
     private void setupCountryMealsRecyclerview(List<CountryRecipesMeal> meals){

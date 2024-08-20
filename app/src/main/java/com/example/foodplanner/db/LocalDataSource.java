@@ -105,7 +105,9 @@ public class LocalDataSource {
     }
 
     public void deleteMealFromFavourite(Meal meal) {
-         mealsDao.deleteMealFromFavourite(meal);
+         disposable.add(mealsDao.deleteMealFromFavourite(meal).subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe());
     }
 
 }

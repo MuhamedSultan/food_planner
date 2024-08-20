@@ -3,50 +3,94 @@ package com.example.foodplanner.home.pojo.randomMeal;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "meals_table")
 public class Meal {
+    @Ignore
     private String strIngredient10;
+    @Ignore
     private String strIngredient12;
+    @Ignore
     private String strIngredient11;
+    @Ignore
     private String strIngredient14;
     private String strCategory;
+    @Ignore
     private String strIngredient13;
+    @Ignore
     private String strIngredient15;
     private String strArea;
     @PrimaryKey
     @NonNull
     private String idMeal;
+    @Ignore
     private String strInstructions;
+    @Ignore
     private String strIngredient1;
+    @Ignore
     private String strIngredient3;
+    @Ignore
     private String strIngredient2;
+    @Ignore
     private String strIngredient5;
+    @Ignore
     private String strIngredient4;
+    @Ignore
     private String strIngredient7;
+    @Ignore
     private String strIngredient6;
+    @Ignore
     private String strIngredient9;
+    @Ignore
     private String strIngredient8;
     private String strMealThumb;
+    @Ignore
     private String strYoutube;
     private String strMeal;
+    @Ignore
     private String strMeasure12;
+    @Ignore
     private String strMeasure13;
+    @Ignore
     private String strMeasure10;
+    @Ignore
     private String strMeasure11;
+    @Ignore
     private String strSource;
+    @Ignore
     private String strMeasure9;
+    @Ignore
     private String strMeasure7;
+    @Ignore
     private String strMeasure8;
+    @Ignore
     private String strMeasure5;
+    @Ignore
     private String strMeasure6;
+    @Ignore
     private String strMeasure3;
+    @Ignore
     private String strMeasure4;
+    @Ignore
     private String strMeasure1;
+    @Ignore
     private String strMeasure2;
+    @Ignore
     private String strMeasure14;
+    @Ignore
     private String strMeasure15;
+    public boolean isFavourite=false;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getStrIngredient10() { return strIngredient10; }
     public void setStrIngredient10(String value) { this.strIngredient10 = value; }
