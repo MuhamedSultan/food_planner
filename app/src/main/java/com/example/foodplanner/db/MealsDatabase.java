@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 
-@Database(entities = {Meal.class},version = 5)
+@Database(entities = {Meal.class},version =7)
 public abstract class MealsDatabase extends RoomDatabase {
 
     public static MealsDatabase instance=null;

@@ -125,7 +125,7 @@ public class CategoryFragment extends Fragment implements CategoryView ,Category
 
     }
     private void setupCategoryMealsRecyclerview(List<Meal> meals){
-        CategoryMealsAdapter adapter=new CategoryMealsAdapter(meals,requireContext(),this);
+        CategoryMealsAdapter adapter=new CategoryMealsAdapter(meals,getContext(),this);
         GridLayoutManager layoutManager=new GridLayoutManager(requireContext(),2);
         binding.allCategoryMealsRecyclerview.setAdapter(adapter);
         binding.allCategoryMealsRecyclerview.setLayoutManager(layoutManager);

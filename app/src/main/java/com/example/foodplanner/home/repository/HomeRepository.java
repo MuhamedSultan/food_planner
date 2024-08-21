@@ -55,14 +55,12 @@ public class HomeRepository {
 
 
     public void addMealToFavoritesToFirebase(String userId, Meal meal) {
-        localDataSource.addMealToFavorites(meal);
         firestore.collection("users").document(userId)
                 .collection("favorites").document(meal.getIdMeal())
                 .set(meal);
     }
 
     public void deleteMealFromFavoritesFromFirebase(String userId, Meal meal) {
-        localDataSource.addMealToFavorites(meal);
         firestore.collection("users").document(userId)
                 .collection("favorites").document(meal.getIdMeal())
                 .delete();

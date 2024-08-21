@@ -1,17 +1,15 @@
 package com.example.foodplanner.favourite.view;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.foodplanner.databinding.FragmentFavouriteBinding;
 import com.example.foodplanner.db.LocalDataSource;
@@ -24,15 +22,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 
-public class FavouriteFragment extends Fragment implements FavouriteView ,FavouriteClick{
+public class FavouriteFragment extends Fragment implements FavouriteView, FavouriteClick {
     private FragmentFavouriteBinding binding;
     private FavouritePresenter presenter;
     private CompositeDisposable disposable;
     FirebaseUser currentUser;
     FavouriteAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class FavouriteFragment extends Fragment implements FavouriteView ,Favour
         LocalDataSource localDataSource = new LocalDataSource(requireContext(), disposable);
         FavouriteRepository repository = FavouriteRepository.getInstance(localDataSource);
         presenter = new FavouritePresenterImpl(this, repository);
-        currentUser= FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -56,22 +56,23 @@ public class FavouriteFragment extends Fragment implements FavouriteView ,Favour
         super.onViewCreated(view, savedInstanceState);
 
         if (currentUser != null) {
-            presenter.getFavouriteMeals(currentUser.getUid()).observe(getViewLifecycleOwner(), this::setupFavourite);
-            presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), this::setupFavourite);
+            presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
+                    .observe(getViewLifecycleOwner(), this::setupFavourite);
         } else {
             Snackbar.make(requireView(), "Error", Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void setupFavourite(List<Meal> mealList) {
-         adapter = new FavouriteAdapter(mealList, requireContext(),this);
-        LinearLayoutManager layoutManager = new GridLayoutManager(requireContext(),2);
-        binding.favouriteRecyclerview.setAdapter(adapter);
-        binding.favouriteRecyclerview.setLayoutManager(layoutManager);
-        adapter.setList(mealList);
-        adapter.notifyDataSetChanged();
+        if (adapter == null) {
+            adapter = new FavouriteAdapter(mealList, requireContext(), this);
+            LinearLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+            binding.favouriteRecyclerview.setLayoutManager(layoutManager);
+            binding.favouriteRecyclerview.setAdapter(adapter);
+        } else {
+            adapter.setList(mealList);
+        }
     }
-
 
     @Override
     public void showLoading() {
@@ -83,11 +84,21 @@ public class FavouriteFragment extends Fragment implements FavouriteView ,Favour
 
     }
 
+    @Override
     public void onFavouriteClick(Meal meal) {
         presenter.deleteMealFromFavourite(meal);
-        presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(),meal);
-        adapter.mealList.remove(meal);
-        adapter.notifyDataSetChanged();
+
+        if (currentUser != null) {
+            presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+        }
+
+        LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+
+        presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
+                .observe(getViewLifecycleOwner(), this::setupFavourite);
+
+        Snackbar.make(requireView(), "Removed From Favourites Successfully", Snackbar.LENGTH_SHORT).show();
     }
 
 }
+

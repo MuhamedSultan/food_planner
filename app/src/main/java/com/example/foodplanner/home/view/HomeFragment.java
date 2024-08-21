@@ -88,6 +88,9 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
         presenter.getAllCategories();
         presenter.getAllCountries();
+
+
+
     }
 
 
@@ -118,25 +121,25 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
 
-        boolean isFavorite = LocalDataSource.isMealFavorite(requireContext(), meal.getIdMeal());
+        boolean isFavorite = LocalDataSource.isMealFavorite(getContext(), meal.getIdMeal());
         meal.isFavourite = isFavorite;
         binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);
 
         binding.addToFavourite.setOnClickListener(v -> {
             meal.isFavourite = !meal.isFavourite;
             if (meal.isFavourite) {
-                presenter.addMealToFavorites(meal);
-                LocalDataSource.setMealFavoriteStatus(requireContext(), meal.getIdMeal(), true);
-                binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
                 if (currentUser != null) {
+                    presenter.addMealToFavorites(meal);
+                    LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+                    binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
                     presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
                 }
             } else {
-                presenter.deleteMealToFavorites(meal);
-                LocalDataSource.setMealFavoriteStatus(requireContext(), meal.getIdMeal(), false);
-                binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
                 if (currentUser != null) {
                     presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+                    presenter.deleteMealToFavorites(meal);
+                    LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+                    binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
                 }
             }
         });

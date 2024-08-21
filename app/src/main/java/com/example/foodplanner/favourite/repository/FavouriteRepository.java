@@ -34,7 +34,7 @@ public class FavouriteRepository {
         return instance;
     }
 
-    public LiveData<List<Meal>> getFavouriteMeals( String userId) {
+    public LiveData<List<Meal>> getFavouriteMeals(String userId) {
         return localDataSource.getFavouriteMeals(userId);
     }
 
@@ -55,7 +55,7 @@ public class FavouriteRepository {
                         liveData.setValue(mealList);
                     } else {
                         Log.e("FavouriteRepository", "Error getting documents: ", task.getException());
-                       // liveData.setValue(new ArrayList<>());
+                        liveData.setValue(new ArrayList<>());
                     }
                 });
         return liveData;
@@ -70,8 +70,6 @@ public class FavouriteRepository {
          localDataSource.deleteMealFromFavourite(meal);
     }
     public void deleteMealFromFavoritesFromFirebase(String userId,Meal meal) {
-
-        localDataSource.addMealToFavorites(meal);
         firestore.collection("users").document(userId)
                 .collection("favorites").document(meal.getIdMeal())
                 .delete();
