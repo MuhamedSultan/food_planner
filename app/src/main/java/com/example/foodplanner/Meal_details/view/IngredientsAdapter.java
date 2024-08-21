@@ -36,6 +36,7 @@ public IngredientsAdapter(List<Ingredients> ingredients,Context context){
     public void onBindViewHolder(@NonNull IngredientsViewHolder holder, int position) {
         Ingredients ingredientItems=ingredients.get(position);
     holder.ingredientName.setText(ingredientItems.getName());
+    holder.tvIngredientMeasure.setText(ingredientItems.getIngredientMeasure());
         Glide.with(context).load(ingredientItems.getImageUrl()).into(holder.ingredientImage);
 
     }
@@ -50,12 +51,12 @@ public IngredientsAdapter(List<Ingredients> ingredients,Context context){
 
      class IngredientsViewHolder extends RecyclerView.ViewHolder {
     ImageView ingredientImage;
-    TextView ingredientName;
+    TextView ingredientName,tvIngredientMeasure;
         public IngredientsViewHolder(@NonNull View itemView) {
             super(itemView);
             ingredientImage=itemView.findViewById(R.id.ingredientImage);
             ingredientName=itemView.findViewById(R.id.tvIngredient);
-
+            tvIngredientMeasure=itemView.findViewById(R.id.tvIngredientMeasure);
         }
     }
 }

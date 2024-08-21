@@ -29,4 +29,6 @@
     <string name="sign_out">Sign out</string>
     <string name="categories">Categories</string>
     <string name="countries">Countries</string>
+    <string name="ingredientMeasure">ingredientMeasure</string>
+    <string name="ingredient_name">Ingredient Name</string>
 </resources>
