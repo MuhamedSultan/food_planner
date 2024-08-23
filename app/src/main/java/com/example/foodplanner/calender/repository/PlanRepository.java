@@ -6,6 +6,7 @@ import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 public class PlanRepository {
@@ -22,7 +23,10 @@ public class PlanRepository {
         return instance;
     }
 
-    public Observable<List<Meal>> getMealOfPlan(String mealOfDay){
+    public Observable<List<MealPlan>> getMealOfPlan(String mealOfDay){
         return localDataSource.getMealOfPlan(mealOfDay);
+    }
+   public Completable deleteMealFromPlan(MealPlan mealPlan){
+        return localDataSource.deleteMealFromPlan(mealPlan);
     }
 }

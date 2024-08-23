@@ -19,11 +19,11 @@ import java.util.List;
 
 public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MealViewHolder> {
 
-    private List<Meal> meals;
+    private List<MealPlan> meals;
     private Context context;
     PlanMealClick planMealClick;
 
-    public PlanAdapter(List<Meal> meals, Context context,PlanMealClick planMealClick) {
+    public PlanAdapter(List<MealPlan> meals, Context context,PlanMealClick planMealClick) {
         this.meals = meals;
         this.context = context;
         this.planMealClick=planMealClick;
@@ -38,11 +38,14 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MealViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        Meal meal = meals.get(position);
+        MealPlan meal = meals.get(position);
         Glide.with(context).load(meal.getStrMealThumb()).into(holder.mealImage);
         holder.tvMealName.setText(meal.getStrMeal());
         holder.mealImage.setOnClickListener(v->{
             planMealClick.onClickPlanMeal(meal.getIdMeal());
+        });
+        holder.deleteFromPlan.setOnClickListener(v->{
+            planMealClick.onClickDeleteMeal(meal);
         });
     }
 
@@ -52,13 +55,15 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MealViewHolder
     }
 
     public static class MealViewHolder extends RecyclerView.ViewHolder {
-        ImageView mealImage;
+        ImageView mealImage,deleteFromPlan;
         TextView tvMealName;
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             mealImage = itemView.findViewById(R.id.planImage);
+            deleteFromPlan = itemView.findViewById(R.id.deleteFromPlan);
             tvMealName = itemView.findViewById(R.id.tvPlan);
+
         }
     }
 }

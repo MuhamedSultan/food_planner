@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class WeekdaysAdapter extends RecyclerView.Adapter<WeekdaysAdapter.Weekda
     private OnWeekdayClickListener listener;
     private String selectedDay = null;
     PlanMealClick planMealClick;
-    private Map<String, List<Meal>> mealsMap = new HashMap<>();
+    private Map<String, List<MealPlan>> mealsMap = new HashMap<>();
 
     public WeekdaysAdapter(List<String> weekdays, OnWeekdayClickListener listener,PlanMealClick planMealClick) {
         this.weekdays = weekdays;
@@ -79,7 +80,7 @@ public class WeekdaysAdapter extends RecyclerView.Adapter<WeekdaysAdapter.Weekda
         return weekdays.size();
     }
 
-    public void updateMeals(String day, List<Meal> meals) {
+    public void updateMeals(String day, List<MealPlan> meals) {
         mealsMap.put(day, meals);
         notifyDataSetChanged();
     }

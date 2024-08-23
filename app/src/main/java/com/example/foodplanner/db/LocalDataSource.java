@@ -117,8 +117,12 @@ public class LocalDataSource {
                 .subscribe());
     }
 
-    public Observable<List<Meal>> getMealOfPlan(String mealOfDay) {
+    public Observable<List<MealPlan>> getMealOfPlan(String mealOfDay) {
         return mealsDao.getMealOfPlan(mealOfDay);
+    }
+
+   public Completable deleteMealFromPlan(MealPlan mealPlan){
+        return mealsDao.deleteMealFromPlan(mealPlan);
     }
 
 }

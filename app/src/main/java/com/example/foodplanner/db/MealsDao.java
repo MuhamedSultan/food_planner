@@ -31,5 +31,8 @@ public interface MealsDao {
     Completable addMealToPlan(MealPlan meal);
 
     @Query("SELECT * FROM plan_tables where dayOfMeal=:mealOfDay")
-    Observable<List<Meal>> getMealOfPlan(String mealOfDay);
+    Observable<List<MealPlan>> getMealOfPlan(String mealOfDay);
+
+    @Delete
+    Completable deleteMealFromPlan(MealPlan mealPlan);
 }

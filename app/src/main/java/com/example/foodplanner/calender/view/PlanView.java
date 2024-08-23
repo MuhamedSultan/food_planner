@@ -7,6 +7,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Observable;
 
 public interface PlanView {
+    void showMessage(String message);
     void showLoading();
     void hideLoading();
 }

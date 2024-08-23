@@ -18,12 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.calender.presenter.PlanPresenter;
 import com.example.foodplanner.calender.presenter.PlanPresenterImpl;
 import com.example.foodplanner.calender.repository.PlanRepository;
 import com.example.foodplanner.databinding.FragmentCalenderBinding;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,17 +37,23 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
-public class CalenderFragment extends Fragment implements WeekdaysAdapter.OnWeekdayClickListener ,PlanMealClick{
+public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapter.OnWeekdayClickListener ,PlanMealClick{
 
     private RecyclerView rvWeekdays;
     private WeekdaysAdapter weekdaysAdapter;
     private LocalDataSource localDataSource;
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private PlanRepository repository;
+    private PlanPresenter presenter;
+    private CompositeDisposable disposable ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disposable = new CompositeDisposable();
         localDataSource = new LocalDataSource(getContext(), disposable);
+        repository=new PlanRepository(localDataSource);
+        presenter=new PlanPresenterImpl(this,repository);
+
     }
 
     @Override
@@ -56,7 +64,6 @@ public class CalenderFragment extends Fragment implements WeekdaysAdapter.OnWeek
 
         weekdaysAdapter = new WeekdaysAdapter(getWeekdays(), this,this);
         rvWeekdays.setAdapter(weekdaysAdapter);
-
         return view;
     }
 
@@ -71,7 +78,7 @@ public class CalenderFragment extends Fragment implements WeekdaysAdapter.OnWeek
 
     @Override
     public void onWeekdayClick(String weekday) {
-        disposable.add(localDataSource.getMealOfPlan(weekday)
+        disposable.add(presenter.getMealOfPlan(weekday)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mealPlans -> {
@@ -89,5 +96,25 @@ public class CalenderFragment extends Fragment implements WeekdaysAdapter.OnWeek
     public void onClickPlanMeal(String mealId) {
         NavDirections navDirections=CalenderFragmentDirections.actionCalenderFragmentToMealDetailsFragment(mealId);
         Navigation.findNavController(requireView()).navigate(navDirections);
+    }
+
+    @Override
+    public void onClickDeleteMeal(MealPlan meal) {
+        presenter.deleteMealFromPlan(meal);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Snackbar.make(requireView(),message,Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
     }
 }
