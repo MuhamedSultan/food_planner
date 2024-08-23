@@ -58,7 +58,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         public FavouriteViewHolder(@NonNull View itemView) {
             super(itemView);
             favouriteImage=itemView.findViewById(R.id.favouriteImage);
-            tvFavourite=itemView.findViewById(R.id.tvFavourite);
+            tvFavourite=itemView.findViewById(R.id.tvPlan);
             favoriteIcon=itemView.findViewById(R.id.favouriteIcon);
         }
     }

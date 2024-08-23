@@ -3,10 +3,13 @@ package com.example.foodplanner.Meal_details.presenter;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.Meal_details.view.MealsDetailsView;
 import com.example.foodplanner.api.NetworkCallback;
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
 
 public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
 
@@ -41,6 +44,7 @@ public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
 
     }
 
+
     @Override
     public void addMealToFavorites(Meal meal) {
         repository.addMealToFavorites(meal);
@@ -63,6 +67,11 @@ public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
     public void deleteMealFromFavoritesFromFirebase(String userId, Meal meal) {
         repository.deleteMealFromFavoritesFromFirebase(userId, meal);
 
+    }
+
+    @Override
+    public void addMealToPlan(MealPlan meal) {
+        repository.addMealToPlan(meal);
     }
 
 }

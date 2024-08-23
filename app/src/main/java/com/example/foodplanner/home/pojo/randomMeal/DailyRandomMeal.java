@@ -4,8 +4,11 @@
 
 package com.example.foodplanner.home.pojo.randomMeal;
 
-import java.util.List;
+import androidx.room.TypeConverters;
 
+import com.example.foodplanner.calender.pojo.MealPlan;
+
+import java.util.List;
 public class DailyRandomMeal {
     private List<Meal> meals;
 

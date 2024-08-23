@@ -1,5 +1,6 @@
 package com.example.foodplanner.Meal_details.view;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,8 @@ import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenterImpl;
 import com.example.foodplanner.Meal_details.repository.MealsDetailsRepository;
 import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
+import com.example.foodplanner.calender.pojo.MealPlan;
+import com.example.foodplanner.databinding.DaysOfPlanBinding;
 import com.example.foodplanner.databinding.FragmentMealDetailsBinding;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
@@ -109,7 +112,52 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
         updateFavoriteIcon(isFavorite);
 
         binding.addToFavourite.setOnClickListener(v -> toggleFavoriteStatus(meal));
+        binding.addToPlan.setOnClickListener(v -> {
+            DaysOfPlanBinding dialogBinding = DaysOfPlanBinding.inflate(LayoutInflater.from(requireContext()));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setView(dialogBinding.getRoot());
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+            dialogBinding.chipSaturday.setOnClickListener(view -> {
+                handleChipClick("Saturday", meal, alertDialog);
+            });
+            dialogBinding.chipSunday.setOnClickListener(view -> {
+                handleChipClick("Sunday", meal, alertDialog);
+            });
+            dialogBinding.chipMonday.setOnClickListener(view -> {
+                handleChipClick("Monday", meal, alertDialog);
+            });
+            dialogBinding.chipTuesday.setOnClickListener(view -> {
+                handleChipClick("Tuesday", meal, alertDialog);
+            });
+            dialogBinding.chipWednesday.setOnClickListener(view -> {
+                handleChipClick("Wednesday", meal, alertDialog);
+            });
+            dialogBinding.chipThursday2.setOnClickListener(view -> {
+                handleChipClick("Thursday", meal, alertDialog);
+            });
+            dialogBinding.chipFriday.setOnClickListener(view -> {
+                handleChipClick("Friday", meal, alertDialog);
+            });
+        });
     }
+
+
+
+    private void handleChipClick(String dayOfMeal, Meal meal, AlertDialog alertDialog) {
+        MealPlan mealPlan = new MealPlan();
+        mealPlan.setDayOfMeal(dayOfMeal);
+        mealPlan.setIdMeal(meal.getIdMeal());
+        mealPlan.setStrMeal(meal.getStrMeal());
+        mealPlan.setStrMealThumb(meal.getStrMealThumb());
+        mealPlan.setUserId(currentUser.getUid());
+        presenter.addMealToPlan(mealPlan);
+        showMessage("Meal added to your plan for " + dayOfMeal);
+        alertDialog.dismiss();
+    }
+
 
     private void toggleFavoriteStatus(Meal meal) {
         if (currentUser == null) {
@@ -132,9 +180,14 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
     }
 
     private void addMealToFavorites(Meal meal) {
-        presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
-        presenter.addMealToFavorites(meal);
-        LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+        if (currentUser != null) {
+            meal.setUserId(currentUser.getUid());
+            presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
+            presenter.addMealToFavorites(meal);
+            LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+        } else {
+            showMessage("You must be logged in to manage favorites");
+        }
     }
 
     private void removeMealFromFavorites(Meal meal) {
@@ -155,4 +208,6 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
     @Override
     public void hideLoading() {
     }
+
+
 }

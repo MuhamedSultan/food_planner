@@ -91,9 +91,13 @@
         tools:layout="@layout/fragment_favourite" />
     <fragment
         android:id="@+id/calenderFragment"
-        android:name="com.example.foodplanner.calender.CalenderFragment"
+        android:name="com.example.foodplanner.calender.view.CalenderFragment"
         android:label="fragment_calender"
-        tools:layout="@layout/fragment_calender" />
+        tools:layout="@layout/fragment_calender" >
+        <action
+            android:id="@+id/action_calenderFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.foodplanner.Meal_details.view.MealDetailsFragment"

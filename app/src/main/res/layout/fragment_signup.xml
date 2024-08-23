@@ -41,7 +41,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/username"
-        app:boxStrokeColor="@color/green"
+        app:boxStrokeColor="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="@string/email"
-        app:boxStrokeColor="@color/green"
+        app:boxStrokeColor="@color/blue"
         app:layout_constraintEnd_toEndOf="@+id/usernameLayout"
         app:layout_constraintStart_toStartOf="@+id/usernameLayout"
         app:layout_constraintTop_toBottomOf="@id/usernameLayout">
@@ -78,7 +78,7 @@
         android:layout_marginTop="16dp"
         android:hint="@string/password"
 
-        app:boxStrokeColor="@color/green"
+        app:boxStrokeColor="@color/blue"
         app:layout_constraintEnd_toEndOf="@+id/emailLayout"
         app:layout_constraintStart_toStartOf="@+id/emailLayout"
         app:layout_constraintTop_toBottomOf="@id/emailLayout">
@@ -97,7 +97,7 @@
         android:layout_marginTop="16dp"
 
         android:hint="Confirm Password"
-        app:boxStrokeColor="@color/green"
+        app:boxStrokeColor="@color/blue"
         app:layout_constraintEnd_toEndOf="@+id/passwordLayout"
         app:layout_constraintStart_toStartOf="@+id/passwordLayout"
         app:layout_constraintTop_toBottomOf="@id/passwordLayout"

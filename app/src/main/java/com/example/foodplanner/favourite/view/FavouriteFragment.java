@@ -58,6 +58,8 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
         if (currentUser != null) {
             presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
                     .observe(getViewLifecycleOwner(), this::setupFavourite);
+            presenter.getFavouriteMeals(currentUser.getUid())
+                    .observe(getViewLifecycleOwner(), this::setupFavourite);
         } else {
             Snackbar.make(requireView(), "Error", Snackbar.LENGTH_LONG).show();
         }
@@ -86,16 +88,13 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
 
     @Override
     public void onFavouriteClick(Meal meal) {
-        presenter.deleteMealFromFavourite(meal);
 
         if (currentUser != null) {
             presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+            presenter.deleteMealFromFavourite(meal);
         }
-
         LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
 
-        presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
-                .observe(getViewLifecycleOwner(), this::setupFavourite);
 
         Snackbar.make(requireView(), "Removed From Favourites Successfully", Snackbar.LENGTH_SHORT).show();
     }
