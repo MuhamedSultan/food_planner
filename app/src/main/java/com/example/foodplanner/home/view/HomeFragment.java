@@ -129,6 +129,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
             meal.isFavourite = !meal.isFavourite;
             if (meal.isFavourite) {
                 if (currentUser != null) {
+                    meal.setUserId(currentUser.getUid());
                     presenter.addMealToFavorites(meal);
                     LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
                     binding.addToFavourite.setImageResource(R.drawable.fill_favorite);

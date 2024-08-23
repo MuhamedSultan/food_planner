@@ -155,8 +155,6 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
         mealPlan.setUserId(currentUser.getUid());
         presenter.addMealToPlan(mealPlan);
         showMessage("Meal added to your plan for " + dayOfMeal);
-
-        // Dismiss the dialog
         alertDialog.dismiss();
     }
 
@@ -182,9 +180,14 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
     }
 
     private void addMealToFavorites(Meal meal) {
-        presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
-        presenter.addMealToFavorites(meal);
-        LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+        if (currentUser != null) {
+            meal.setUserId(currentUser.getUid());
+            presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
+            presenter.addMealToFavorites(meal);
+            LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+        } else {
+            showMessage("You must be logged in to manage favorites");
+        }
     }
 
     private void removeMealFromFavorites(Meal meal) {
