@@ -45,7 +45,7 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     private List<IngredientMeal> ingredientMeals;
     private List<Category> categoryMeals;
     private List<CountryMeal> countryMeals;
-    private String typeList = "i"; // Default to ingredients
+    private String typeList = "i";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -218,8 +218,8 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     }
 
     private void setupIngredientsRecycler(List<IngredientMeal> meals) {
-        IngredientsAdapter adapter = new IngredientsAdapter(meals, requireContext());
-        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        IngredientsAdapter adapter = new IngredientsAdapter(meals, getContext());
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.searchRecycler.setAdapter(adapter);
         binding.searchRecycler.setLayoutManager(layoutManager);
         adapter.setList(meals);
@@ -254,7 +254,7 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     }
 
     private void selectChip(Chip chip) {
-        chip.setChipBackgroundColorResource(R.color.green);
+        chip.setChipBackgroundColorResource(R.color.blue);
         chip.setTextColor(getResources().getColor(R.color.white));
         chip.setSelected(true);
     }

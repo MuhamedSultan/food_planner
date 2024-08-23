@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/favouriteImage"
+            android:id="@+id/planImage"
             android:layout_width="0dp"
             android:layout_height="250dp"
             android:scaleType="centerCrop"
@@ -27,11 +27,11 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:background="@color/light_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/favouriteImage"
+            app:layout_constraintBottom_toBottomOf="@+id/planImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/favouriteImage"
-            app:layout_constraintTop_toTopOf="@+id/favouriteImage"
+            app:layout_constraintStart_toStartOf="@+id/planImage"
+            app:layout_constraintTop_toTopOf="@+id/planImage"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
@@ -44,19 +44,10 @@
             android:maxLines="2"
             android:textStyle="bold"
             android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/favouriteImage"
+            app:layout_constraintBottom_toBottomOf="@+id/planImage"
             app:layout_constraintEnd_toEndOf="@+id/view4"
             app:layout_constraintStart_toStartOf="@+id/view4"
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
-        <ImageView
-            android:id="@+id/favouriteIcon"
-            android:layout_width="39dp"
-            android:layout_height="43dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favouriteImage"
-            app:srcCompat="@drawable/fill_favorite" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

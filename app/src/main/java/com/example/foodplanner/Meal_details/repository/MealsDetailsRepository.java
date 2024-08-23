@@ -2,10 +2,15 @@ package com.example.foodplanner.Meal_details.repository;
 
 import com.example.foodplanner.api.NetworkCallback;
 import com.example.foodplanner.api.RemoteDataSource;
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
 
 public class MealsDetailsRepository {
 
@@ -51,4 +56,8 @@ public class MealsDetailsRepository {
                 .collection("favorites").document(meal.getIdMeal())
                 .delete();
     }
+    public void addMealToPlan(MealPlan meal){
+        localDataSource.addMealToPlan(meal);
+    }
+
 }

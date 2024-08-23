@@ -186,8 +186,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     }
 
     private void setUpAllCountriesRecyclerview(List<CountryMeal> meals) {
-        AllCountriesAdapter adapter = new AllCountriesAdapter(meals, requireContext(), this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        AllCountriesAdapter adapter = new AllCountriesAdapter(meals, getContext(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.countriesRecyclerview.setAdapter(adapter);
         binding.countriesRecyclerview.setLayoutManager(layoutManager);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);

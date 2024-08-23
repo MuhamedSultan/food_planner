@@ -7,11 +7,13 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 
 @Dao
 public interface MealsDao {
@@ -24,4 +26,10 @@ public interface MealsDao {
 
     @Delete
     Completable deleteMealFromFavourite(Meal meal);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    Completable addMealToPlan(MealPlan meal);
+
+    @Query("SELECT * FROM plan_tables where dayOfMeal=:mealOfDay")
+    Observable<List<Meal>> getMealOfPlan(String mealOfDay);
 }

@@ -1,7 +1,6 @@
 package com.example.foodplanner.home.pojo.randomMeal;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -83,6 +82,18 @@ public class Meal {
     private String strMeasure15;
     public boolean isFavourite=false;
     private String userId;
+
+
+
+    public String getMealOfDay() {
+        return mealOfDay;
+    }
+
+    public void setMealOfDay(String mealOfDay) {
+        this.mealOfDay = mealOfDay;
+    }
+
+    private String mealOfDay;
 
     public String getUserId() {
         return userId;
@@ -205,4 +216,5 @@ public class Meal {
 
     public String getStrMeasure15() { return strMeasure15; }
     public void setStrMeasure15(String value) { this.strMeasure15 = value; }
+
 }

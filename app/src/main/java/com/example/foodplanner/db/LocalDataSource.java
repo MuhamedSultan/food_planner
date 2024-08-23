@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -16,6 +17,7 @@ import java.util.Locale;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.internal.operators.completable.CompletableSubscribeOn;
@@ -92,7 +94,6 @@ public class LocalDataSource {
     }
 
 
-
     public void addMealToFavorites(Meal meal) {
         disposable.add(mealsDao.addMealToFavourite(meal).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -105,9 +106,19 @@ public class LocalDataSource {
     }
 
     public void deleteMealFromFavourite(Meal meal) {
-         disposable.add(mealsDao.deleteMealFromFavourite(meal).subscribeOn(Schedulers.io())
-                 .observeOn(AndroidSchedulers.mainThread())
-                 .subscribe());
+        disposable.add(mealsDao.deleteMealFromFavourite(meal).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
+
+    public void addMealToPlan(MealPlan meal) {
+        disposable.add(mealsDao.addMealToPlan(meal).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
+
+    public Observable<List<Meal>> getMealOfPlan(String mealOfDay) {
+        return mealsDao.getMealOfPlan(mealOfDay);
     }
 
 }
