@@ -99,7 +99,9 @@ public class WeekdaysAdapter extends RecyclerView.Adapter<WeekdaysAdapter.Weekda
             dayName = itemView.findViewById(R.id.dayName);
             mealsRecyclerView = itemView.findViewById(R.id.mealsRecyclerView);
             noItemsTextView = itemView.findViewById(R.id.noItemsTextView);
-            mealsRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+            LinearLayoutManager layoutManager=new LinearLayoutManager(itemView.getContext());
+            mealsRecyclerView.setLayoutManager(layoutManager);
+            layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         }
     }
 }

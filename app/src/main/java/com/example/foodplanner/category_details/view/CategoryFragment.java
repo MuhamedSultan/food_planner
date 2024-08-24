@@ -15,7 +15,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.category_details.pojo.Meal;
 import com.example.foodplanner.category_details.presenter.CategoryDetailsPresenter;
@@ -61,6 +63,8 @@ public class CategoryFragment extends Fragment implements CategoryView ,Category
          String categoryName = args.getCategoryName();
         presenter.getMealsByCategory(categoryName);
         setupSearch();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.GONE);
+
 
     }
 
@@ -137,5 +141,14 @@ public class CategoryFragment extends Fragment implements CategoryView ,Category
         NavDirections navDirections=
                 CategoryFragmentDirections.actionCategoryFragmentToMealDetailsFragment(id);
         Navigation.findNavController(requireView()).navigate(navDirections);
+    }
+
+    private void hideStatusBar() {
+        if (getActivity() != null) {
+            getActivity().getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
     }
 }

@@ -5,4 +5,6 @@
     <item android:title="@string/sign_out"
         android:id="@+id/signOut"
         />
+    <item android:title="@string/login"
+        android:id="@+id/Login"/>
 </menu>

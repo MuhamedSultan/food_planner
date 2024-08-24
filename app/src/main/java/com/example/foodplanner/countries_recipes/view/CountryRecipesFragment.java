@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.category_details.pojo.Meal;
@@ -67,6 +68,7 @@ public class CountryRecipesFragment extends Fragment implements CountryRecipesVi
         presenter.getCountryRecipes(countryName);
         binding.tvMeals.setText(countryName+" Meals");
         setupSearch();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.GONE);
 
     }
 

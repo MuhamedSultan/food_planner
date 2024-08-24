@@ -12,12 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 
 public class SplashFragment extends Fragment {
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,15 +35,14 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         hideActionBar();
-        hideStatusBar();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_authFragment);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (isAdded() && !isDetached()) {
+                NavController navController = NavHostFragment.findNavController(SplashFragment.this);
+                navController.navigate(R.id.action_splashFragment_to_authFragment);
             }
-        }, 3000);
 
+        }, 5000);
     }
 
     private void hideActionBar() {
@@ -54,34 +54,8 @@ public class SplashFragment extends Fragment {
         }
     }
 
-    private void showActionBar() {
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().show();
-            }
-        }
-    }
 
-    private void hideStatusBar() {
-        if (getActivity() != null) {
-            getActivity().getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-            );
-        }
-    }
 
-    private void showStatusBar() {
-        if (getActivity() != null) {
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        showActionBar();
-        showStatusBar();
-    }
+
 }

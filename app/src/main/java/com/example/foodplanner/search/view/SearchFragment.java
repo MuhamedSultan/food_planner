@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.api.RemoteDataSource;
 import com.example.foodplanner.databinding.FragmentSearchBinding;
@@ -28,6 +30,7 @@ import com.example.foodplanner.home.view.adapter.CountryClick;
 import com.example.foodplanner.search.presenter.SearchPresenter;
 import com.example.foodplanner.search.presenter.SearchPresenterImpl;
 import com.example.foodplanner.search.repository.SearchRepository;
+import com.example.foodplanner.util.NetworkUtil;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SearchFragment extends Fragment implements SearchView, CountryClick, CategoryClick {
@@ -45,6 +49,7 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     private List<IngredientMeal> ingredientMeals;
     private List<Category> categoryMeals;
     private List<CountryMeal> countryMeals;
+    CompositeDisposable disposable=new CompositeDisposable();
     private String typeList = "i";
 
     @Override
@@ -65,15 +70,15 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
         return binding.getRoot();
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+        checkInterNetConnection();
         presenter.getAllIngredients();
         setupChipListeners();
 
-        Observable.create(emitter -> binding.edSearch.addTextChangedListener(new TextWatcher() {
+        disposable.add(Observable.create(emitter -> binding.edSearch.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
@@ -106,8 +111,46 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(filteredList -> updateRecyclerView((List<?>) filteredList),
-                        Throwable::printStackTrace);
+                        Throwable::printStackTrace));
     }
+
+    private void checkInterNetConnection() {
+        disposable.add(
+                NetworkUtil.observeNetworkConnectivity(requireContext())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(isConnected -> {
+                            if (isConnected) {
+                                showData();
+                            } else {
+                                showNoInternetAnimation();
+                            }
+                        }, throwable -> {
+                            Log.e("HomeFragment", "Error In network connection", throwable);
+                        })
+        );
+    }
+
+
+    private void showNoInternetAnimation() {
+        binding.lottieAnimationView.setVisibility(View.VISIBLE);
+        binding.tvDesc.setVisibility(View.VISIBLE);
+        binding.searchRecycler.setVisibility(View.GONE);
+        binding.edSearch.setVisibility(View.GONE);
+        binding.categoriesChip.setVisibility(View.GONE);
+        binding.countriesChip.setVisibility(View.GONE);
+        binding.ingredientChip.setVisibility(View.GONE);
+    }
+
+    private void showData() {
+        binding.lottieAnimationView.setVisibility(View.GONE);
+        binding.tvDesc.setVisibility(View.GONE);
+        binding.searchRecycler.setVisibility(View.VISIBLE);
+        binding.categoriesChip.setVisibility(View.VISIBLE);
+        binding.countriesChip.setVisibility(View.VISIBLE);
+        binding.ingredientChip.setVisibility(View.VISIBLE);
+    }
+
 
     private List<IngredientMeal> filterIngredientMeals(String searchText) {
         List<IngredientMeal> filteredMeals = new ArrayList<>();
@@ -254,7 +297,7 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     }
 
     private void selectChip(Chip chip) {
-        chip.setChipBackgroundColorResource(R.color.blue);
+        chip.setChipBackgroundColorResource(R.color.primary_color);
         chip.setTextColor(getResources().getColor(R.color.white));
         chip.setSelected(true);
     }
@@ -264,4 +307,7 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
         chip.setTextColor(getResources().getColor(R.color.black));
         chip.setSelected(false);
     }
-}
+
+
+    }
+

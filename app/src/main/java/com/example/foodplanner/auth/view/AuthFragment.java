@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.auth.presenter.AuthPresenter;
 import com.example.foodplanner.auth.presenter.AuthPresenterImpl;
@@ -60,6 +61,7 @@ public class AuthFragment extends Fragment implements AuthView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.GONE);
         hideActionBar();
         binding.guestMode.setOnClickListener(v->{
             Navigation.findNavController(v).navigate(R.id.action_authFragment_to_homeFragment);

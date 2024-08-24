@@ -18,7 +18,7 @@ public interface MealsDetailsPresenter {
 
     void deleteMealFromFavoritesFromFirebase(String userId, Meal meal);
 
-    void addMealToPlan(MealPlan meal);
+    void addMealToPlan(String userId,MealPlan meal);
 
 
 

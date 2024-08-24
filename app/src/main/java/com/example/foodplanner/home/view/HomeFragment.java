@@ -32,6 +32,7 @@ import com.example.foodplanner.home.view.adapter.AllCategoriesAdapter;
 import com.example.foodplanner.home.view.adapter.AllCountriesAdapter;
 import com.example.foodplanner.home.view.adapter.CategoryClick;
 import com.example.foodplanner.home.view.adapter.CountryClick;
+import com.example.foodplanner.util.NetworkUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,27 +41,27 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment implements HomeView, CategoryClick, CountryClick {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
     LocalDataSource localDataSource;
     FirebaseUser currentUser;
-
-
+    CompositeDisposable disposable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CompositeDisposable disposable=new CompositeDisposable();
+         disposable = new CompositeDisposable();
         RemoteDataSource remoteDataSource = new RemoteDataSource();
-        localDataSource = new LocalDataSource(getContext(),disposable);
+        localDataSource = new LocalDataSource(getContext(), disposable);
         HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource, localDataSource);
         presenter = new HomePresenterImpl(this, homeRepository);
-        currentUser=FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -73,8 +74,49 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setActionBarUpButtonVisibility(false);
+        showActionBar();
         ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+        checkInterNetConnection();
+    }
+
+    private void checkInterNetConnection() {
+        disposable.add(
+                NetworkUtil.observeNetworkConnectivity(requireContext())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(isConnected -> {
+                            if (isConnected) {
+                                showData();
+                            } else {
+                                showNoInternetAnimation();
+                            }
+                        }, throwable -> {
+                            Log.e("HomeFragment", "Error In network connection", throwable);
+                        })
+        );
+    }
+
+
+    private void showNoInternetAnimation() {
+        binding.lottieAnimationView.setVisibility(View.VISIBLE);
+        binding.tvDesc.setVisibility(View.VISIBLE);
+        binding.allCategoriesRecyclerView.setVisibility(View.GONE);
+        binding.countriesRecyclerview.setVisibility(View.GONE);
+        binding.tvDailyInspiration.setVisibility(View.GONE);
+        binding.tvAllCategories.setVisibility(View.GONE);
+        binding.tvAllCountries.setVisibility(View.GONE);
+        binding.dailyMealCardView.setVisibility(View.GONE);
+    }
+
+    private void showData() {
+        binding.lottieAnimationView.setVisibility(View.GONE);
+        binding.tvDesc.setVisibility(View.GONE);
+        binding.allCategoriesRecyclerView.setVisibility(View.VISIBLE);
+        binding.countriesRecyclerview.setVisibility(View.VISIBLE);
+        binding.tvDailyInspiration.setVisibility(View.VISIBLE);
+        binding.tvAllCategories.setVisibility(View.VISIBLE);
+        binding.tvAllCountries.setVisibility(View.VISIBLE);
+        binding.dailyMealCardView.setVisibility(View.VISIBLE);
 
         String savedDate = LocalDataSource.getSavedDate(requireContext());
         String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -88,9 +130,13 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
         presenter.getAllCategories();
         presenter.getAllCountries();
+    }
 
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+      disposable.clear();
     }
 
 
@@ -126,25 +172,25 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);
 
         binding.addToFavourite.setOnClickListener(v -> {
+            if (currentUser == null) {
+                showMessage("Please log in to add meal to favorites.");
+                return;
+            }
+
             meal.isFavourite = !meal.isFavourite;
             if (meal.isFavourite) {
-                if (currentUser != null) {
-                    meal.setUserId(currentUser.getUid());
-                    presenter.addMealToFavorites(meal);
-                    LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
-                    binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
-                    presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
-                }
+                meal.setUserId(currentUser.getUid());
+                presenter.addMealToFavorites(meal);
+                LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+                binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
+                presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
             } else {
-                if (currentUser != null) {
-                    presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
-                    presenter.deleteMealToFavorites(meal);
-                    LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
-                    binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
-                }
+                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+                presenter.deleteMealToFavorites(meal);
+                LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+                binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
             }
         });
-
         binding.imageView2.setOnClickListener(v -> {
             NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
             Navigation.findNavController(v).navigate(navDirections);
@@ -195,14 +241,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         adapter.setList(meals);
     }
 
-    private void setActionBarUpButtonVisibility(boolean visible) {
-        if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(visible);
-            }
-        }
-    }
+
 
     @Override
     public void onCategoryClick(String categoryName) {
@@ -215,6 +254,14 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToCountryRecipesFragment(countyName);
         Navigation.findNavController(requireView()).navigate(navDirections);
     }
+    private void showActionBar() {
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().show();
+            }
+        }
+    }
 
+    }
 
-}

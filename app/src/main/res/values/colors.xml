@@ -6,8 +6,11 @@
     <color name="trans_blue">#CC008080</color>
     <color name="trans_gray">#1AA9A9A9</color>
 <!--    <color name="green">#CC85A544</color>-->
-    <color name="blue">#004c4c</color>
+    <color name="primary_color">#004c4c</color>
+    <color name="secondary_color">#B3004C4C</color>
     <color name="light_black">#1E1E1E</color>
     <color name="light_gray">#E6E7E7E7</color>
 
 </resources>
+
+

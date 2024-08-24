@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 public interface PlanPresenter {
 
-    Observable<List<MealPlan>> getMealOfPlan(String mealOfDay);
-    void deleteMealFromPlan(MealPlan mealPlan);
+    Observable<List<MealPlan>> getMealOfPlan(String userId,String mealOfDay);
+    void deleteMealFromPlan(String userId,MealPlan mealPlan);
 
 }

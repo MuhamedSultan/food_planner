@@ -56,8 +56,11 @@ public class MealsDetailsRepository {
                 .collection("favorites").document(meal.getIdMeal())
                 .delete();
     }
-    public void addMealToPlan(MealPlan meal){
+    public void addMealToPlan(String userId,MealPlan meal){
         localDataSource.addMealToPlan(meal);
+        firestore.collection("users").document(userId)
+                .collection("week_plan").document(meal.getIdMeal())
+                .set(meal);
     }
 
 }

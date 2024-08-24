@@ -30,8 +30,8 @@ public interface MealsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable addMealToPlan(MealPlan meal);
 
-    @Query("SELECT * FROM plan_tables where dayOfMeal=:mealOfDay")
-    Observable<List<MealPlan>> getMealOfPlan(String mealOfDay);
+    @Query("SELECT * FROM plan_tables where dayOfMeal=:mealOfDay And userId=:userId")
+    Observable<List<MealPlan>> getMealOfPlan(String userId,String mealOfDay);
 
     @Delete
     Completable deleteMealFromPlan(MealPlan mealPlan);

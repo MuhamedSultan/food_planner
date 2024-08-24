@@ -70,8 +70,8 @@ public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
     }
 
     @Override
-    public void addMealToPlan(MealPlan meal) {
-        repository.addMealToPlan(meal);
+    public void addMealToPlan(String userId, MealPlan meal) {
+        repository.addMealToPlan(userId,meal);
     }
 
 }

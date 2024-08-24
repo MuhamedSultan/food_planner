@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/authFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.example.foodplanner.splash.SplashFragment"
         android:label="Splash"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_authFragment"
             app:destination="@id/authFragment"
+            app:enterAnim="@anim/from_left"
             app:popUpTo="@id/nav_graph" />
     </fragment>
     <fragment
@@ -75,7 +76,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.foodplanner.search.view.SearchFragment"
-        android:label="fragment_search"
+        android:label="Search"
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_countryRecipesFragment"
@@ -87,12 +88,12 @@
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.example.foodplanner.favourite.view.FavouriteFragment"
-        android:label="fragment_favourite"
+        android:label="Favourite"
         tools:layout="@layout/fragment_favourite" />
     <fragment
         android:id="@+id/calenderFragment"
         android:name="com.example.foodplanner.calender.view.CalenderFragment"
-        android:label="fragment_calender"
+        android:label="Week Plan"
         tools:layout="@layout/fragment_calender" >
         <action
             android:id="@+id/action_calenderFragment_to_mealDetailsFragment"
@@ -101,7 +102,7 @@
     <fragment
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.foodplanner.Meal_details.view.MealDetailsFragment"
-        android:label="fragment_meal_details"
+        android:label="Meal Details"
         tools:layout="@layout/fragment_meal_details" >
         <argument
             android:name="mealID"
@@ -110,7 +111,7 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.example.foodplanner.category_details.view.CategoryFragment"
-        android:label="fragment_category"
+        android:label="Categories"
         tools:layout="@layout/fragment_category" >
         <argument
             android:name="categoryName"
@@ -122,7 +123,7 @@
     <fragment
         android:id="@+id/countryRecipesFragment"
         android:name="com.example.foodplanner.countries_recipes.view.CountryRecipesFragment"
-        android:label="fragment_country_recipes"
+        android:label="country Meals"
         tools:layout="@layout/fragment_country_recipes" >
         <argument
             android:name="CountryName"
