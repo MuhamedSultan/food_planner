@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -59,6 +60,11 @@ public class AuthFragment extends Fragment implements AuthView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        hideActionBar();
+        binding.guestMode.setOnClickListener(v->{
+            Navigation.findNavController(v).navigate(R.id.action_authFragment_to_homeFragment);
+        });
+
 
         binding.btnEmailSignup.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_authFragment_to_signupFragment);
@@ -90,7 +96,14 @@ public class AuthFragment extends Fragment implements AuthView {
             }
         }
     }
-
+    private void hideActionBar() {
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().hide();
+            }
+        }
+    }
     @Override
     public void successSignIn() {
         Navigation.findNavController(requireView()).navigate(R.id.action_authFragment_to_homeFragment);

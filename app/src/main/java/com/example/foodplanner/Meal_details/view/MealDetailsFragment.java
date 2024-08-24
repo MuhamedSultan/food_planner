@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.bumptech.glide.Glide;
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.Meal_details.pojo.IngredientItem;
 import com.example.foodplanner.Meal_details.pojo.Ingredients;
 import com.example.foodplanner.Meal_details.presenter.MealsDetailsPresenter;
@@ -67,6 +68,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
         MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
         String mealId = args.getMealID();
         presenter.getAllMealDetailsById(mealId);
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.GONE);
     }
 
     private void setUpRecyclerview(List<Ingredients> ingredients) {
@@ -113,6 +115,10 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
 
         binding.addToFavourite.setOnClickListener(v -> toggleFavoriteStatus(meal));
         binding.addToPlan.setOnClickListener(v -> {
+            if (currentUser == null) {
+                showMessage("Please log in to add meal to week plan.");
+                return;
+            }
             DaysOfPlanBinding dialogBinding = DaysOfPlanBinding.inflate(LayoutInflater.from(requireContext()));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -153,7 +159,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
         mealPlan.setStrMeal(meal.getStrMeal());
         mealPlan.setStrMealThumb(meal.getStrMealThumb());
         mealPlan.setUserId(currentUser.getUid());
-        presenter.addMealToPlan(mealPlan);
+        presenter.addMealToPlan(currentUser.getUid(),mealPlan);
         showMessage("Meal added to your plan for " + dayOfMeal);
         alertDialog.dismiss();
     }
@@ -161,7 +167,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
 
     private void toggleFavoriteStatus(Meal meal) {
         if (currentUser == null) {
-            showMessage("You must be logged in to manage favorites");
+            showMessage("Please log in to add meal to favorites.");
             return;
         }
 
@@ -186,7 +192,7 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
             presenter.addMealToFavorites(meal);
             LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
         } else {
-            showMessage("You must be logged in to manage favorites");
+            showMessage("Please log in to add meal to favorites.");
         }
     }
 

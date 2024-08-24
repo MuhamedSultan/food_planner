@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.databinding.FragmentFavouriteBinding;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.favourite.presenter.FavouritePresenter;
@@ -54,6 +56,7 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
         if (currentUser != null) {
             presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
@@ -61,11 +64,22 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
             presenter.getFavouriteMeals(currentUser.getUid())
                     .observe(getViewLifecycleOwner(), this::setupFavourite);
         } else {
-            Snackbar.make(requireView(), "Error", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(requireView(), "Please log in to see favourite meals", Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void setupFavourite(List<Meal> mealList) {
+        if (mealList.isEmpty()){
+            binding.imageView.setVisibility(View.VISIBLE);
+            binding.tvDesc.setVisibility(View.VISIBLE);
+            binding.tvDesc1.setVisibility(View.VISIBLE);
+            binding.favouriteRecyclerview.setVisibility(View.GONE);
+        }else {
+            binding.imageView.setVisibility(View.GONE);
+            binding.tvDesc.setVisibility(View.GONE);
+            binding.tvDesc1.setVisibility(View.GONE);
+            binding.favouriteRecyclerview.setVisibility(View.VISIBLE);
+        }
         if (adapter == null) {
             adapter = new FavouriteAdapter(mealList, requireContext(), this);
             LinearLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);

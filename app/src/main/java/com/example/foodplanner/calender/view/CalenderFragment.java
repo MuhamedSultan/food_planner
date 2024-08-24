@@ -1,9 +1,11 @@
 package com.example.foodplanner.calender.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodplanner.MainActivity;
 import com.example.foodplanner.R;
 import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.calender.presenter.PlanPresenter;
@@ -26,6 +29,8 @@ import com.example.foodplanner.databinding.FragmentCalenderBinding;
 import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +50,7 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
     private PlanRepository repository;
     private PlanPresenter presenter;
     private CompositeDisposable disposable ;
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
         localDataSource = new LocalDataSource(getContext(), disposable);
         repository=new PlanRepository(localDataSource);
         presenter=new PlanPresenterImpl(this,repository);
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
+
 
     }
 
@@ -61,7 +69,6 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
         View view = inflater.inflate(R.layout.fragment_calender, container, false);
         rvWeekdays = view.findViewById(R.id.planRecyclerview);
         rvWeekdays.setLayoutManager(new LinearLayoutManager(getContext()));
-
         weekdaysAdapter = new WeekdaysAdapter(getWeekdays(), this,this);
         rvWeekdays.setAdapter(weekdaysAdapter);
         return view;
@@ -70,6 +77,14 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+        requireActivity().invalidateOptionsMenu();
+        if (currentUser==null){
+            rvWeekdays.setVisibility(View.INVISIBLE);
+            showMessage("Please log in to see week plan.");
+//            ((MainActivity) requireActivity()).hideMenuItem(R.id.signOut);
+//            ((MainActivity) requireActivity()).showMenuItem(R.id.Login);
+        }
     }
 
     private List<String> getWeekdays() {
@@ -78,7 +93,7 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
 
     @Override
     public void onWeekdayClick(String weekday) {
-        disposable.add(presenter.getMealOfPlan(weekday)
+        disposable.add(presenter.getMealOfPlan(currentUser.getUid(),weekday)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mealPlans -> {
@@ -100,7 +115,7 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
 
     @Override
     public void onClickDeleteMeal(MealPlan meal) {
-        presenter.deleteMealFromPlan(meal);
+        presenter.deleteMealFromPlan(currentUser.getUid(),meal);
     }
 
     @Override
@@ -117,4 +132,6 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
     public void hideLoading() {
 
     }
+
 }
+
