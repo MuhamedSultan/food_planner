@@ -1,5 +1,6 @@
 package com.example.foodplanner.home.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -74,14 +75,14 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireActivity().invalidateOptionsMenu();
         showActionBar();
-        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
         checkInterNetConnection();
     }
 
     private void checkInterNetConnection() {
         disposable.add(
-                NetworkUtil.observeNetworkConnectivity(requireContext())
+                NetworkUtil.observeNetworkConnectivity(getContext())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(isConnected -> {
@@ -118,11 +119,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.tvAllCountries.setVisibility(View.VISIBLE);
         binding.dailyMealCardView.setVisibility(View.VISIBLE);
 
-        String savedDate = LocalDataSource.getSavedDate(requireContext());
+        String savedDate = LocalDataSource.getSavedDate(getContext());
         String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         if (savedDate != null && savedDate.equals(todayDate)) {
-            String savedMealId = LocalDataSource.getSavedMealId(requireContext());
+            String savedMealId = LocalDataSource.getSavedMealId(getContext());
             presenter.getAllMealDetailsById(savedMealId);
         } else {
             presenter.getRandomMeal();
@@ -159,15 +160,21 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
 
     private void showMeal(List<Meal> mealsDetails) {
-        Meal meal = mealsDetails.get(0);
-        LocalDataSource.saveMealId(requireContext(), meal.getIdMeal());
 
-        Glide.with(requireContext()).load(meal.getStrMealThumb()).into(binding.imageView2);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        Meal meal = mealsDetails.get(0);
+        LocalDataSource.saveMealId(context, meal.getIdMeal());
+
+        Glide.with(context).load(meal.getStrMealThumb()).into(binding.imageView2);
         binding.strMeal.setText(meal.getStrMeal());
         binding.strCategory.setText(meal.getStrCategory());
         binding.strArea.setText(meal.getStrArea());
 
-        boolean isFavorite = LocalDataSource.isMealFavorite(getContext(), meal.getIdMeal());
+        boolean isFavorite = LocalDataSource.isMealFavorite(context, meal.getIdMeal());
         meal.isFavourite = isFavorite;
         binding.addToFavourite.setImageResource(isFavorite ? R.drawable.fill_favorite : R.drawable.favorite_ic);
 
@@ -181,13 +188,13 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
             if (meal.isFavourite) {
                 meal.setUserId(currentUser.getUid());
                 presenter.addMealToFavorites(meal);
-                LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
+                LocalDataSource.setMealFavoriteStatus(context, meal.getIdMeal(), true);
                 binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
                 presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
             } else {
                 presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
                 presenter.deleteMealToFavorites(meal);
-                LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+                LocalDataSource.setMealFavoriteStatus(context, meal.getIdMeal(), false);
                 binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
             }
         });
@@ -203,9 +210,15 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     }
 
 
+
     @Override
     public void showErrorMessage(String message) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show();
+        View rootView = getView();
+        if (rootView != null) {
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+        } else {
+            Log.e("HomeFragment", "Cannot show error message, view is null: " + message);
+        }
     }
 
     @Override
@@ -224,8 +237,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     }
 
     private void setUpAllCategoriesRecyclerview(List<Category> categories) {
-        AllCategoriesAdapter adapter = new AllCategoriesAdapter(categories, requireContext(), this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        AllCategoriesAdapter adapter = new AllCategoriesAdapter(categories, getContext(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.allCategoriesRecyclerView.setAdapter(adapter);
         binding.allCategoriesRecyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -263,5 +276,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+
     }
+}
 

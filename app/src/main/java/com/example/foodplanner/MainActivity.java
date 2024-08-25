@@ -2,6 +2,7 @@ package com.example.foodplanner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityMainBinding.inflate(getLayoutInflater());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(binding.getRoot());
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(
@@ -72,29 +74,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.signOut){
             LocalDataSource.clearUser(this);
-            navController.navigate(R.id.loginFragment);
+            firebaseAuth.signOut();
+            invalidateOptionsMenu();
+            navController.navigate(R.id.authFragment);
         } else if (item.getItemId()==R.id.Login) {
-            navController.navigate(R.id.loginFragment);
-
+            navController.navigate(R.id.authFragment);
         }
         return super.onOptionsItemSelected(item);
-
-    }
-    public void hideMenuItem(int itemId) {
-        if (menu != null) {
-            MenuItem item = menu.findItem(itemId);
-            if (item != null) {
-                item.setVisible(false);
-            }
-        }
-    }
-    public void showMenuItem(int itemId) {
-        if (menu != null) {
-            MenuItem item = menu.findItem(itemId);
-            if (item != null) {
-                item.setVisible(true);
-            }
-        }
     }
 
     @Override
@@ -108,5 +94,13 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.Login).setVisible(false);
         }
         return true;
+    }
+    @Override
+    public void onBackPressed() {
+        if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.authFragment) {
+            finishAffinity();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

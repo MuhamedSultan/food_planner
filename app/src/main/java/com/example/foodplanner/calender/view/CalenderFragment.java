@@ -77,13 +77,10 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
         requireActivity().invalidateOptionsMenu();
         if (currentUser==null){
             rvWeekdays.setVisibility(View.INVISIBLE);
             showMessage("Please log in to see week plan.");
-//            ((MainActivity) requireActivity()).hideMenuItem(R.id.signOut);
-//            ((MainActivity) requireActivity()).showMenuItem(R.id.Login);
         }
     }
 
@@ -133,5 +130,10 @@ public class CalenderFragment extends Fragment implements PlanView,WeekdaysAdapt
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+    }
 }
 

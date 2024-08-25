@@ -56,8 +56,7 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
-
+        requireActivity().invalidateOptionsMenu();
         if (currentUser != null) {
             presenter.getFavouriteMealsFromFirebase(currentUser.getUid())
                     .observe(getViewLifecycleOwner(), this::setupFavourite);
@@ -113,5 +112,11 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
         Snackbar.make(requireView(), "Removed From Favourites Successfully", Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+
+    }
 }
 

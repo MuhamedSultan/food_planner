@@ -73,7 +73,10 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
+
+
+
+        requireActivity().invalidateOptionsMenu();
         checkInterNetConnection();
         presenter.getAllIngredients();
         setupChipListeners();
@@ -269,8 +272,8 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
     }
 
     private void setupCountriesRecycler(List<CountryMeal> meals) {
-        AllCountriesAdapter adapter = new AllCountriesAdapter(meals, requireContext(), this);
-        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        AllCountriesAdapter adapter = new AllCountriesAdapter(meals, getContext(), this);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.searchRecycler.setAdapter(adapter);
         binding.searchRecycler.setLayoutManager(layoutManager);
         adapter.setList(meals);
@@ -308,6 +311,10 @@ public class SearchFragment extends Fragment implements SearchView, CountryClick
         chip.setSelected(false);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
     }
+}
 
