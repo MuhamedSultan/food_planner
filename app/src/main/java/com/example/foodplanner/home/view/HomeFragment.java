@@ -187,13 +187,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
             meal.isFavourite = !meal.isFavourite;
             if (meal.isFavourite) {
                 meal.setUserId(currentUser.getUid());
-                presenter.addMealToFavorites(meal);
+                presenter.addMealToFavorites(currentUser.getUid(),meal);
                 LocalDataSource.setMealFavoriteStatus(context, meal.getIdMeal(), true);
                 binding.addToFavourite.setImageResource(R.drawable.fill_favorite);
-                presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
             } else {
-                presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
-                presenter.deleteMealToFavorites(meal);
+                presenter.deleteMealToFavorites(currentUser.getUid(),meal);
                 LocalDataSource.setMealFavoriteStatus(context, meal.getIdMeal(), false);
                 binding.addToFavourite.setImageResource(R.drawable.favorite_ic);
             }

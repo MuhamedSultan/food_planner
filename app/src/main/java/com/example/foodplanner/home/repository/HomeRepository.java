@@ -45,12 +45,14 @@ public class HomeRepository {
         remoteDataSource.getAllCountries(callback);
     }
 
-    public void addMealToFavorites(Meal meal) {
+    public void addMealToFavorites(String userId,Meal meal) {
         localDataSource.addMealToFavorites(meal);
+        addMealToFavoritesToFirebase(userId,meal);
     }
 
-    public void deleteMealToFavorites(Meal meal) {
+    public void deleteMealToFavorites(String userId,Meal meal) {
         localDataSource.deleteMealFromFavourite(meal);
+        deleteMealFromFavoritesFromFirebase(userId,meal);
     }
 
 

@@ -6,6 +6,7 @@ import com.example.foodplanner.api.NetworkCallback;
 import com.example.foodplanner.calender.pojo.MealPlan;
 import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -47,13 +48,15 @@ public class MealsDetailsPresenterImpl implements MealsDetailsPresenter {
 
     @Override
     public void addMealToFavorites(Meal meal) {
-        repository.addMealToFavorites(meal);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        repository.addMealToFavorites(meal, userId);
         view.showMessage("Added Successfully To Favourite");
     }
 
     @Override
     public void deleteMealToFavorites(Meal meal) {
-        repository.deleteMealToFavorites(meal);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        repository.deleteMealFromFavorites(meal, userId);
         view.showMessage("Deleted Successfully from Favourite");
 
     }

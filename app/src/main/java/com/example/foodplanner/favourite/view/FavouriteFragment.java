@@ -103,10 +103,11 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
     public void onFavouriteClick(Meal meal) {
 
         if (currentUser != null) {
-            presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
+            meal.setUserId(currentUser.getUid());
             presenter.deleteMealFromFavourite(meal);
+            LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
         }
-        LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+        presenter.getFavouriteMealsFromFirebase(currentUser.getUid()).observe(getViewLifecycleOwner(), this::setupFavourite);
 
 
         Snackbar.make(requireView(), "Removed From Favourites Successfully", Snackbar.LENGTH_SHORT).show();

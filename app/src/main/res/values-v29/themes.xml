@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.FoodPlanner" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:statusBarColor">@color/secondary_color</item>
+    </style>
+</resources>

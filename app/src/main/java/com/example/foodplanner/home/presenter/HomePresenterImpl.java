@@ -111,8 +111,9 @@ public class HomePresenterImpl implements  HomePresenter {
     }
 
     @Override
-    public void addMealToFavorites(Meal meal) {
-        homeRepository.addMealToFavorites(meal);
+    public void addMealToFavorites(String userId,Meal meal) {
+        homeRepository.addMealToFavorites(userId,meal);
+        addMealToFavoritesToFirebase(userId,meal);
         view.showMessage("Added Successfully to Favourite");
     }
 
@@ -122,8 +123,8 @@ public class HomePresenterImpl implements  HomePresenter {
     }
 
     @Override
-    public void deleteMealToFavorites(Meal meal) {
-        homeRepository.deleteMealToFavorites(meal);
+    public void deleteMealToFavorites(String userId,Meal meal) {
+        homeRepository.deleteMealToFavorites(userId,meal);
         view.showMessage("Deleted Successfully from Favourite");
 
     }

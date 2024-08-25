@@ -36,13 +36,20 @@ public class MealsDetailsRepository {
         remoteDataSource.getMealDetailsById(callback, id);
     }
 
-    public void addMealToFavorites(Meal meal) {
+    public void addMealToFavorites(Meal meal, String userId) {
+        // Add to Room
         localDataSource.addMealToFavorites(meal);
+
+        // Add to Firebase
+        addMealToFavoritesToFirebase(userId, meal);
     }
 
-    public void deleteMealToFavorites(Meal meal) {
-
+    public void deleteMealFromFavorites(Meal meal, String userId) {
+        // Delete from Room
         localDataSource.deleteMealFromFavourite(meal);
+
+        // Delete from Firebase
+        deleteMealFromFavoritesFromFirebase(userId, meal);
     }
 
     public void addMealToFavoritesToFirebase(String userId, Meal meal) {

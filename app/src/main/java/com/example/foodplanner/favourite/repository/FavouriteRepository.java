@@ -65,9 +65,10 @@ public class FavouriteRepository {
         localDataSource.addMealToFavorites(meal);
     }
 
-    public void deleteMealFromFavorites( Meal meal) {
+    public void deleteMealFromFavorites( Meal meal,String userId) {
 
          localDataSource.deleteMealFromFavourite(meal);
+         deleteMealFromFavoritesFromFirebase(userId,meal);
     }
     public void deleteMealFromFavoritesFromFirebase(String userId,Meal meal) {
         firestore.collection("users").document(userId)

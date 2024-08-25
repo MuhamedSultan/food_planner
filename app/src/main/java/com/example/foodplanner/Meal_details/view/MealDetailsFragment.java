@@ -188,7 +188,6 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
     private void addMealToFavorites(Meal meal) {
         if (currentUser != null) {
             meal.setUserId(currentUser.getUid());
-            presenter.addMealToFavoritesToFirebase(currentUser.getUid(), meal);
             presenter.addMealToFavorites(meal);
             LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), true);
         } else {
@@ -197,9 +196,13 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
     }
 
     private void removeMealFromFavorites(Meal meal) {
-        presenter.deleteMealToFavorites(meal);
-        presenter.deleteMealFromFavoritesFromFirebase(currentUser.getUid(), meal);
-        LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+        if (currentUser != null) {
+            meal.setUserId(currentUser.getUid());
+            presenter.deleteMealToFavorites(meal);
+            LocalDataSource.setMealFavoriteStatus(getContext(), meal.getIdMeal(), false);
+        } else {
+            showMessage("Please log in to remove meal from favorites.");
+        }
     }
 
     @Override

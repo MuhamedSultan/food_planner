@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import com.example.foodplanner.favourite.repository.FavouriteRepository;
 import com.example.foodplanner.favourite.view.FavouriteView;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -32,7 +33,10 @@ public class FavouritePresenterImpl implements FavouritePresenter {
 
     @Override
     public void deleteMealFromFavourite(Meal meal) {
-        repository.deleteMealFromFavorites(meal);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        repository.deleteMealFromFavorites(meal, userId);
+
+
     }
 
     @Override
