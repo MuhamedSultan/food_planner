@@ -43,4 +43,5 @@
     <string name="explore_food_dishes_and_n_add_them_to_favourite">Explore food dishes and \n add them to favourite</string>
     <string name="your_favourite_list_is_empty">Your Favourite List is Empty</string>
     <string name="you_lost_your_connection_please_check_it">You Lost Your Connection Please Check it.</string>
+    <string name="meals_you_might_like">Meals You Might Like</string>
 </resources>

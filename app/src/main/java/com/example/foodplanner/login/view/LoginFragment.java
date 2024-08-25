@@ -18,18 +18,22 @@ import com.example.foodplanner.login.LoginPresenterImpl;
 import com.example.foodplanner.login.pojo.User;
 import com.example.foodplanner.util.CustomAlertDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginFragment extends Fragment implements LoginView{
 private FragmentLoginBinding binding;
 private LoginPresenterImpl loginPresenter;
 private CustomAlertDialog customAlertDialog;
+FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginPresenter=new LoginPresenterImpl(this);
         customAlertDialog=new CustomAlertDialog(requireContext());
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -51,7 +55,9 @@ private CustomAlertDialog customAlertDialog;
             if (validateInput(email,password)) {
                 User user = new User(email, password);
                 loginPresenter.loginWithEmail(user);
-                LocalDataSource.saveUser(getContext(),user.getEmail());
+                if (currentUser != null) {
+                    LocalDataSource.saveUser(getContext(), currentUser.getUid());
+                }
             }
         });
     }
@@ -66,8 +72,11 @@ private CustomAlertDialog customAlertDialog;
 
     @Override
     public void successfulLogin() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_homeFragment);
-    }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            LocalDataSource.saveUser(getContext(), user.getUid());
+        }
+        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_homeFragment);    }
 
     @Override
     public void failureLogin(String message) {

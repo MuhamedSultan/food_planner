@@ -9,6 +9,8 @@ import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class HomeRepository {
     private final RemoteDataSource remoteDataSource;
     private final LocalDataSource localDataSource;
@@ -66,5 +68,9 @@ public class HomeRepository {
         firestore.collection("users").document(userId)
                 .collection("favorites").document(meal.getIdMeal())
                 .delete();
+    }
+
+    public Single<DailyRandomMeal> getMealsYouMightLike() {
+        return remoteDataSource.getMealsYouMightLike();
     }
 }

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/favouriteImage"
+            android:id="@+id/youMightLike"
             android:layout_width="0dp"
             android:layout_height="250dp"
             android:scaleType="centerCrop"
@@ -25,38 +25,47 @@
         <View
             android:id="@+id/view4"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:background="@color/trans_black"
-            app:layout_constraintBottom_toBottomOf="@+id/favouriteImage"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/favouriteImage"
-            app:layout_constraintTop_toTopOf="@+id/favouriteImage"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/youMightLike"
+            app:layout_constraintTop_toTopOf="@+id/youMightLike"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/tvPlan"
-            android:layout_width="0dp"
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
+            android:maxLines="2"
+            android:padding="4dp"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:maxLines="2"
             android:textStyle="bold"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/favouriteImage"
-            app:layout_constraintEnd_toEndOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/view4"
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
-        <ImageView
-            android:id="@+id/favouriteIcon"
-            android:layout_width="39dp"
-            android:layout_height="43dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favouriteImage"
-            app:srcCompat="@drawable/fill_favorite" />
+        <TextView
+            android:id="@+id/tvCountry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvName"
+            app:layout_constraintStart_toStartOf="@+id/tvName"
+            app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

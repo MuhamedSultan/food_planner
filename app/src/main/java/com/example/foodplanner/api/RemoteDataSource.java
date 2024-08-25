@@ -9,6 +9,7 @@ import com.example.foodplanner.home.pojo.ingredients.IngredientsResponse;
 import com.example.foodplanner.home.pojo.randomMeal.DailyRandomMeal;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -83,4 +84,8 @@ public class RemoteDataSource {
                 )
         );
     }
+        public Single<DailyRandomMeal> getMealsYouMightLike() {
+            return mealsClient.getApiService().getMealYouMightLike();
+    }
+
 }

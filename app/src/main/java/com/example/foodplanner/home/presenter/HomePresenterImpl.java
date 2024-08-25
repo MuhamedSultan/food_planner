@@ -12,21 +12,27 @@ import com.example.foodplanner.home.view.HomeView;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
-public class HomePresenterImpl implements  HomePresenter {
+public class HomePresenterImpl implements HomePresenter {
     private final HomeView view;
     private final HomeRepository homeRepository;
+    private final CompositeDisposable disposable;
 
-    public HomePresenterImpl(HomeView view, HomeRepository homeRepository) {
+    public HomePresenterImpl(HomeView view, HomeRepository homeRepository, CompositeDisposable disposable) {
         this.view = view;
         this.homeRepository = homeRepository;
+        this.disposable = disposable;
     }
 
     @Override
     public void getRandomMeal() {
         view.showLoading();
-        homeRepository.getDailyMeals(new NetworkCallback<DailyRandomMeal>(){
+        homeRepository.getDailyMeals(new NetworkCallback<DailyRandomMeal>() {
 
             @Override
             public void onSuccessResult(DailyRandomMeal result) {
@@ -52,11 +58,11 @@ public class HomePresenterImpl implements  HomePresenter {
         homeRepository.getAllCategories(new NetworkCallback<AllCategories>() {
             @Override
             public void onSuccessResult(AllCategories result) {
-               List<Category> categories=result.getCategories();
-           if (categories!=null&&!categories.isEmpty()){
-               view.showAllCategories(categories);
-           }
-           view.hideLoading();
+                List<Category> categories = result.getCategories();
+                if (categories != null && !categories.isEmpty()) {
+                    view.showAllCategories(categories);
+                }
+                view.hideLoading();
             }
 
             @Override
@@ -73,12 +79,12 @@ public class HomePresenterImpl implements  HomePresenter {
         homeRepository.getAllCountries(new NetworkCallback<AllCountries>() {
             @Override
             public void onSuccessResult(AllCountries result) {
-                List<CountryMeal> countryMeals=result.getMeals();
-                if (countryMeals!=null&&!countryMeals.isEmpty()) {
+                List<CountryMeal> countryMeals = result.getMeals();
+                if (countryMeals != null && !countryMeals.isEmpty()) {
                     view.showAllCountries(countryMeals);
                 }
                 view.hideLoading();
-                }
+            }
 
             @Override
             public void onFailureResult(String message) {
@@ -94,8 +100,8 @@ public class HomePresenterImpl implements  HomePresenter {
         homeRepository.getMealsDetailsById(new NetworkCallback<DailyRandomMeal>() {
             @Override
             public void onSuccessResult(DailyRandomMeal result) {
-                List<Meal> mealList=result.getMeals();
-                if (mealList!=null&&!mealList.isEmpty()) {
+                List<Meal> mealList = result.getMeals();
+                if (mealList != null && !mealList.isEmpty()) {
                     view.showMealsDetailsById(mealList);
                 }
                 view.hideLoading();
@@ -106,32 +112,47 @@ public class HomePresenterImpl implements  HomePresenter {
                 view.showErrorMessage(message);
                 view.hideLoading();
             }
-        },id);
+        }, id);
 
     }
 
     @Override
-    public void addMealToFavorites(String userId,Meal meal) {
-        homeRepository.addMealToFavorites(userId,meal);
-        addMealToFavoritesToFirebase(userId,meal);
+    public void addMealToFavorites(String userId, Meal meal) {
+        homeRepository.addMealToFavorites(userId, meal);
+        addMealToFavoritesToFirebase(userId, meal);
         view.showMessage("Added Successfully to Favourite");
     }
 
     @Override
-    public void addMealToFavoritesToFirebase(String userId,Meal meal) {
-        homeRepository.addMealToFavoritesToFirebase(userId,meal);
+    public void addMealToFavoritesToFirebase(String userId, Meal meal) {
+        homeRepository.addMealToFavoritesToFirebase(userId, meal);
     }
 
     @Override
-    public void deleteMealToFavorites(String userId,Meal meal) {
-        homeRepository.deleteMealToFavorites(userId,meal);
+    public void deleteMealToFavorites(String userId, Meal meal) {
+        homeRepository.deleteMealToFavorites(userId, meal);
         view.showMessage("Deleted Successfully from Favourite");
 
     }
 
     @Override
+    public void getMealsYouMightLike() {
+         disposable.add(homeRepository.getMealsYouMightLike()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        dailyRandomMeal -> {
+                            view.showMealsYouMightLike(dailyRandomMeal.getMeals());
+                        },
+                        throwable -> {
+                            view.showErrorMessage(throwable.getMessage());
+                        }
+                ));
+    }
+
+    @Override
     public void deleteMealFromFavoritesFromFirebase(String userId, Meal meal) {
-        homeRepository.deleteMealFromFavoritesFromFirebase(userId,meal);
+        homeRepository.deleteMealFromFavoritesFromFirebase(userId, meal);
     }
 
 }

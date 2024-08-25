@@ -42,10 +42,10 @@ public class LocalDataSource {
 
     }
 
-    public static void saveUser(Context context, String email) {
+    public static void saveUser(Context context, String userId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_EMAIL, userId);
         editor.apply();
     }
 

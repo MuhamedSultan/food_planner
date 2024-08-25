@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
 import com.example.foodplanner.calender.pojo.MealPlan;
-import com.example.foodplanner.home.pojo.randomMeal.Meal;
 
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MealViewHolder
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
-            mealImage = itemView.findViewById(R.id.planImage);
+            mealImage = itemView.findViewById(R.id.youMightLike);
             deleteFromPlan = itemView.findViewById(R.id.deleteFromPlan);
             tvMealName = itemView.findViewById(R.id.tvPlan);
 

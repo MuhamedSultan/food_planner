@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/planImage"
+            android:id="@+id/youMightLike"
             android:layout_width="0dp"
             android:layout_height="250dp"
             android:scaleType="centerCrop"
@@ -26,12 +26,12 @@
             android:id="@+id/view4"
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:background="@color/light_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/planImage"
+            android:background="@color/trans_black"
+            app:layout_constraintBottom_toBottomOf="@+id/youMightLike"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/planImage"
-            app:layout_constraintTop_toTopOf="@+id/planImage"
+            app:layout_constraintStart_toStartOf="@+id/youMightLike"
+            app:layout_constraintTop_toTopOf="@+id/youMightLike"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:maxLines="2"
             android:textStyle="bold"
             android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/planImage"
+            app:layout_constraintBottom_toBottomOf="@+id/youMightLike"
             app:layout_constraintEnd_toEndOf="@+id/view4"
             app:layout_constraintStart_toStartOf="@+id/view4"
             app:layout_constraintTop_toTopOf="@+id/view4" />

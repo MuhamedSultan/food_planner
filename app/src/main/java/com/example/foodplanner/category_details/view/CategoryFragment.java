@@ -61,6 +61,7 @@ public class CategoryFragment extends Fragment implements CategoryView ,Category
         super.onViewCreated(view, savedInstanceState);
         CategoryFragmentArgs args = CategoryFragmentArgs.fromBundle(getArguments());
          String categoryName = args.getCategoryName();
+         binding.tvAllMeal.setText("All "+categoryName+" Meals");
         presenter.getMealsByCategory(categoryName);
         setupSearch();
         ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.GONE);

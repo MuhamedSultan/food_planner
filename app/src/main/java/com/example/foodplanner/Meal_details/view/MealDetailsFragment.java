@@ -107,6 +107,8 @@ public class MealDetailsFragment extends Fragment implements MealsDetailsView {
         Glide.with(getContext()).load(meal.getStrMealThumb()).into(binding.imageView4);
         setUpRecyclerview(ingredientItem.getIngredients(meal));
         binding.tvInstructions.setText(meal.getStrInstructions());
+        binding.tvName.setText(meal.getStrMeal());
+        binding.tvCountry.setText(meal.getStrArea()+" Meal");
         playYoutubeVideo(meal.getStrYoutube());
 
         boolean isFavorite = LocalDataSource.isMealFavorite(getContext(), meal.getIdMeal());

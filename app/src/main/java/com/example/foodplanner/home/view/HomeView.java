@@ -11,6 +11,7 @@ public interface HomeView {
     void showAllCategories(List<Category> categories);
     void showMealsDetailsById(List<Meal> mealsDetails);
     void showAllCountries(List<CountryMeal> countryMeals);
+    void showMealsYouMightLike(List<Meal> meals);
     void showErrorMessage(String message);
     void showLoading();
     void hideLoading();

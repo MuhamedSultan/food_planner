@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.auth.presenter.AuthPresenter;
 import com.example.foodplanner.auth.presenter.AuthPresenterImpl;
 import com.example.foodplanner.databinding.FragmentAuthBinding;
+import com.example.foodplanner.db.LocalDataSource;
 import com.example.foodplanner.util.CustomAlertDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class AuthFragment extends Fragment implements AuthView {
@@ -34,13 +38,13 @@ public class AuthFragment extends Fragment implements AuthView {
     private GoogleSignInClient googleSignInClient;
     private AuthPresenter authPresenter;
     CustomAlertDialog customAlertDialog;
+    FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         authPresenter = new AuthPresenterImpl(this);
-
         GoogleSignInOptions gOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -48,6 +52,7 @@ public class AuthFragment extends Fragment implements AuthView {
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gOptions);
         customAlertDialog = new CustomAlertDialog(requireContext());
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
 
     }
 
@@ -80,6 +85,11 @@ public class AuthFragment extends Fragment implements AuthView {
             googleSignInClient.signOut().addOnCompleteListener(task -> {
                 Intent signInIntent = googleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+                if (currentUser != null) {
+                    LocalDataSource.saveUser(getContext(), currentUser.getUid());
+                } else {
+                    Log.e("AuthFragment", "Current user is null, unable to save user data.");
+                }
             });
         });
     }

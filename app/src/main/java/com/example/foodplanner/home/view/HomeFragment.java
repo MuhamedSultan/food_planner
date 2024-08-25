@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,8 @@ import com.example.foodplanner.home.view.adapter.AllCategoriesAdapter;
 import com.example.foodplanner.home.view.adapter.AllCountriesAdapter;
 import com.example.foodplanner.home.view.adapter.CategoryClick;
 import com.example.foodplanner.home.view.adapter.CountryClick;
+import com.example.foodplanner.home.view.adapter.MealMightLike;
+import com.example.foodplanner.home.view.adapter.MealYouMightLikeAdapter;
 import com.example.foodplanner.util.NetworkUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +50,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class HomeFragment extends Fragment implements HomeView, CategoryClick, CountryClick {
+public class HomeFragment extends Fragment implements HomeView, CategoryClick, CountryClick, MealMightLike {
     FragmentHomeBinding binding;
     private HomePresenter presenter;
     LocalDataSource localDataSource;
@@ -61,7 +64,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         RemoteDataSource remoteDataSource = new RemoteDataSource();
         localDataSource = new LocalDataSource(getContext(), disposable);
         HomeRepository homeRepository = HomeRepository.getInstance(remoteDataSource, localDataSource);
-        presenter = new HomePresenterImpl(this, homeRepository);
+        presenter = new HomePresenterImpl(this, homeRepository,disposable);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
@@ -107,6 +110,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.tvAllCategories.setVisibility(View.GONE);
         binding.tvAllCountries.setVisibility(View.GONE);
         binding.dailyMealCardView.setVisibility(View.GONE);
+        binding.mealsYouMightLikeRecyclerview.setVisibility(View.GONE);
+        binding.tvMealsYouMightLike.setVisibility(View.GONE);
     }
 
     private void showData() {
@@ -118,6 +123,9 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         binding.tvAllCategories.setVisibility(View.VISIBLE);
         binding.tvAllCountries.setVisibility(View.VISIBLE);
         binding.dailyMealCardView.setVisibility(View.VISIBLE);
+        binding.mealsYouMightLikeRecyclerview.setVisibility(View.VISIBLE);
+        binding.tvMealsYouMightLike.setVisibility(View.VISIBLE);
+
 
         String savedDate = LocalDataSource.getSavedDate(getContext());
         String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -131,6 +139,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
 
         presenter.getAllCategories();
         presenter.getAllCountries();
+        presenter.getMealsYouMightLike();
     }
 
 
@@ -156,6 +165,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
     @Override
     public void showAllCountries(List<CountryMeal> countryMeals) {
         setUpAllCountriesRecyclerview(countryMeals);
+    }
+
+    @Override
+    public void showMealsYouMightLike(List<Meal> meals) {
+        setupMealYouMightLikeRecyclerview(meals);
     }
 
 
@@ -252,6 +266,14 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         adapter.setList(meals);
     }
 
+    private void setupMealYouMightLikeRecyclerview(List<Meal> meals) {
+        MealYouMightLikeAdapter adapter = new MealYouMightLikeAdapter(meals, getContext(),this);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
+        binding.mealsYouMightLikeRecyclerview.setAdapter(adapter);
+        binding.mealsYouMightLikeRecyclerview.setLayoutManager(layoutManager);
+        adapter.setList(meals);
+    }
+
 
 
     @Override
@@ -280,5 +302,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClick, C
         ((MainActivity) requireActivity()).binding.bottomNavigationView.setVisibility(View.VISIBLE);
 
     }
+
+    @Override
+    public void onClickMealsYouMightLike(Meal meal) {
+        NavDirections navDirections = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
+        Navigation.findNavController(requireView()).navigate(navDirections);    }
 }
 

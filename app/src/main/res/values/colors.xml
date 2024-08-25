@@ -10,6 +10,7 @@
     <color name="secondary_color">#B3004C4C</color>
     <color name="light_black">#1E1E1E</color>
     <color name="light_gray">#E6E7E7E7</color>
+    <color name="trans_black">#99000000</color>
 
 </resources>
 

@@ -26,4 +26,6 @@ public interface ApiService {
     Single<CountryRecipes> getCountryRecipes(@Query("a") String CountryName);
     @GET("api/json/v1/1/list.php?i=list")
     Single<IngredientsResponse> getAllIngredients();
+    @GET("api/json/v1/1/search.php?s=a")
+    Single<DailyRandomMeal> getMealYouMightLike();
 }
