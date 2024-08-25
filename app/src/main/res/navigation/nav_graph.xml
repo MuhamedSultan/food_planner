@@ -93,7 +93,11 @@
         android:id="@+id/favouriteFragment"
         android:name="com.example.foodplanner.favourite.view.FavouriteFragment"
         android:label="Favourite"
-        tools:layout="@layout/fragment_favourite" />
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/calenderFragment"
         android:name="com.example.foodplanner.calender.view.CalenderFragment"

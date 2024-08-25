@@ -40,6 +40,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         holder.favoriteIcon.setOnClickListener(v->{
             favouriteClick.onFavouriteClick(meal);
         });
+        holder.favouriteImage.setOnClickListener(v->{
+            favouriteClick.onFavouriteItemClick(meal);
+        });
     }
 
     @Override

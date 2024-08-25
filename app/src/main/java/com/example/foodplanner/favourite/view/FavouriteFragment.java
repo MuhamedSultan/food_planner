@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,6 +21,7 @@ import com.example.foodplanner.favourite.presenter.FavouritePresenter;
 import com.example.foodplanner.favourite.presenter.FavouritePresenterImpl;
 import com.example.foodplanner.favourite.repository.FavouriteRepository;
 import com.example.foodplanner.home.pojo.randomMeal.Meal;
+import com.example.foodplanner.util.NetworkUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -111,6 +114,14 @@ public class FavouriteFragment extends Fragment implements FavouriteView, Favour
 
 
         Snackbar.make(requireView(), "Removed From Favourites Successfully", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFavouriteItemClick(Meal meal) {
+        if (NetworkUtil.isConnected(getContext())) {
+            NavDirections navDirections = FavouriteFragmentDirections.actionFavouriteFragmentToMealDetailsFragment(meal.getIdMeal());
+            Navigation.findNavController(requireView()).navigate(navDirections);
+        }
     }
 
     @Override
